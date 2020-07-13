@@ -1,9 +1,10 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
+	"github.com/coopernurse/gorp"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
 	"time"
 )
 
@@ -17,7 +18,7 @@ type Repository interface {
 }
 
 type repository struct {
-	db *sqlx.DB
+	dbMap *gorp.DbMap
 }
 
 func New(dsn string) (Repository, error) {
@@ -29,19 +30,20 @@ func New(dsn string) (Repository, error) {
 		"3306",
 		"db_name",
 	)
-	db, err := sqlx.Open("mysql", connectionString)
+	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		return nil, fmt.Errorf("Open mysql failed: %v", err)
 	}
-	return &repository{db: db}, nil
+	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{}}
+	return &repository{dbMap: dbmap}, nil
 }
 
 func (r *repository) generateID() (uint64, error) {
 	var id uint64
-	err := r.db.Get(&id, "SELECT UUID_SHORT()")
+	_, err := r.dbMap.Select(&id, "SELECT UUID_SHORT()")
 	return id, err
 }
 
 func (r *repository) Close() error {
-	return r.db.Close()
+	return r.dbMap.Db.Close()
 }

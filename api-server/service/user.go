@@ -15,4 +15,3 @@ func (app *meibunApp) CreateNewUser(name string, email string, password string) 
 	}
 	return app.repo.CreateNewUser(name, email, string(passwordHash))
 }
-
