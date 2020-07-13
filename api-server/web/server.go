@@ -1,6 +1,7 @@
 package web
 
 import (
+	"github.com/kons16/meibun/api-server/service"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -12,9 +13,11 @@ type Server interface {
 }
 
 type server struct {
+	app service.MeibunApp
 }
 
-func NewServer() {
+func NewServer(app service.MeibunApp) Server {
+	return &server{app: app}
 }
 
 func (s *server) Handler() *echo.Echo {
