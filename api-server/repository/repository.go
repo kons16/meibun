@@ -36,7 +36,10 @@ func New(dsn string) (Repository, error) {
 		return nil, fmt.Errorf("Open mysql failed: %v", err)
 	}
 	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{}}
+
 	dbmap.AddTableWithName(model.User{}, "users")
+	dbmap.AddTableWithName(model.UserSession{}, "user_session")
+
 	return &repository{dbMap: dbmap}, nil
 }
 

@@ -61,13 +61,17 @@ func (r *repository) FindPasswordHashByEmail(email string) (string, error) {
 
 func (r *repository) CreateNewToken(userID uint64, token string, expiresAt time.Time) error {
 	now := time.Now()
-	_, err := r.db.Exec(
-		`INSERT INTO user_session
-			(user_id, token, expires_at, created_at, updated_at)
-			VALUES (?, ?, ?, ?, ?)`,
-		userID, token, expiresAt, now, now,
-	)
-	return err
+	userSession := &model.UserSession{
+		UserId: userID,
+		Token: token,
+		ExpiresAt: expiresAt,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
+	if err := r.dbMap.Insert(userSession); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *repository) FindUserByToken(token string) (*model.User, error) {
