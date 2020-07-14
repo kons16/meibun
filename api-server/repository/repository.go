@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/coopernurse/gorp"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/kons16/meibun/api-server/model"
 	"time"
 )
 
@@ -35,6 +36,7 @@ func New(dsn string) (Repository, error) {
 		return nil, fmt.Errorf("Open mysql failed: %v", err)
 	}
 	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{}}
+	dbmap.AddTableWithName(model.User{}, "users")
 	return &repository{dbMap: dbmap}, nil
 }
 

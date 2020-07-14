@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/kons16/hatena_2019/model"
+	"github.com/kons16/meibun/api-server/model"
 	"time"
 )
 
@@ -13,13 +13,18 @@ func (r *repository) CreateNewUser(name string, email string, passwordHash strin
 		return err
 	}
 	now := time.Now()
-	_, err = r.db.Exec(
-		`INSERT INTO user
-						(id, name, email, password_hash, created_at, updated_at)
-						VALUES (?, ?, ?, ?, ?, ?)`,
-		id, name, email, passwordHash, now, now,
-	)
-	return err
+	user := &model.User{
+		ID: id,
+		Name: name,
+		Email: email,
+		PasswordHash: passwordHash,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}
+	if err := r.dbMap.Insert(user); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *repository) FindUserByEmail(email string) (*model.User, error) {
