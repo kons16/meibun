@@ -11,10 +11,10 @@ import (
 
 type Repository interface {
 	CreateNewUser(name string, email string, passwordHash string) error
-	// FindUserByEmail(email string) (*model.User, error)
+	FindUserByEmail(email string) (*model.User, error)
 	CreateNewToken(userID uint64, token string, expiresAt time.Time) error
-	// FindUserByToken(token string) (*model.User, error)
-	// FindPasswordHashByEmail(email string) (string, error)
+	FindUserByToken(token string) (*model.User, error)
+	FindPasswordHashByEmail(email string) (string, error)
 	Close() error
 }
 
