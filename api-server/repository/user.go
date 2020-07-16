@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// name,email,password_hashをもとにusersテーブルに挿入
 func (r *repository) CreateNewUser(name string, email string, passwordHash string) error {
 	id, err := r.generateID()
 	if err != nil {
@@ -26,6 +27,7 @@ func (r *repository) CreateNewUser(name string, email string, passwordHash strin
 	return nil
 }
 
+// emailをもとにuserを検索し、idとnameをmodel.Userにマッピング
 func (r *repository) FindUserByEmail(email string) (*model.User, error) {
 	var user model.User
 	query := "SELECT id,name FROM user WHERE email = ?"
@@ -35,6 +37,7 @@ func (r *repository) FindUserByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
+// emailをもとにuserを検索し、userのハッシュ化パスワードを取得
 func (r *repository) FindPasswordHashByEmail(email string) (string, error) {
 	var hash string
 	query := "SELECT password_hash FROM user WHERE email = ?"
@@ -44,6 +47,7 @@ func (r *repository) FindPasswordHashByEmail(email string) (string, error) {
 	return hash, nil
 }
 
+// userID,token,expiresAtを, user_sessionテーブルに挿入
 func (r *repository) CreateNewToken(userID uint64, token string, expiresAt time.Time) error {
 	now := time.Now()
 	userSession := &model.UserSession{
@@ -59,6 +63,7 @@ func (r *repository) CreateNewToken(userID uint64, token string, expiresAt time.
 	return nil
 }
 
+// tokenをもとにuserのid,nameを取得し、model.Userにマッピング
 func (r *repository) FindUserByToken(token string) (*model.User, error) {
 	var user model.User
 	query := "SELECT id,name FROM user JOIN user_session ON user.id = user_session.user_id WHERE user_session.token = ? && user_session.expires_at > ?"
