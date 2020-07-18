@@ -4,6 +4,7 @@ import (
 	"github.com/kons16/meibun/api-server/service"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"net/http"
 )
 
 const sessionKey = ""
@@ -33,7 +34,7 @@ func (s *server) Handler() *echo.Echo {
 		ContentSecurityPolicy: "default-src 'self'",
 	}))
 
-	e.GET("/", s.indexHandler)
+	e.GET("/index", s.indexHandler)
 	e.GET("/signup", s.willSignupHandler)
 	e.POST("/signup", s.signupHandler)
 	e.GET("/signin", s.willSigninHandler)
@@ -43,9 +44,12 @@ func (s *server) Handler() *echo.Echo {
 	return e
 }
 
-
+// jsonのmessageを返す
 func (s *server) indexHandler(c echo.Context) error {
-	return nil
+	msg := map[string]string{
+		"message": "Hello!",
+	}
+	return c.JSON(http.StatusOK, msg)
 }
 
 func (s *server) willSignupHandler(c echo.Context) error {
