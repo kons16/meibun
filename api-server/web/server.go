@@ -4,6 +4,7 @@ import (
 	"github.com/kons16/meibun/api-server/service"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"net/http"
 )
 
 const sessionKey = ""
@@ -33,6 +34,7 @@ func (s *server) Handler() *echo.Echo {
 		ContentSecurityPolicy: "default-src 'self'",
 	}))
 
+	e.GET("/", s.indexHandler)
 	e.GET("/test", s.testHandler)
 	e.GET("/signup", s.willSignupHandler)
 	e.POST("/signup", s.signupHandler)
@@ -43,4 +45,12 @@ func (s *server) Handler() *echo.Echo {
 	e.GET("/users/:id", s.getUserHandler)
 
 	return e
+}
+
+// indexHandler は GET / に対応
+func (s *server) indexHandler(c echo.Context) error {
+	user := s.findUser(c)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"User":    user,
+	})
 }

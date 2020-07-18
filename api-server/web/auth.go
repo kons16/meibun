@@ -49,10 +49,7 @@ func (s *server) signupHandler(c echo.Context) error {
 		Expires: expiresAt,
 	})
 
-	msg := map[string]string{
-		"message": "Hello!",
-	}
-	return c.JSON(http.StatusOK, msg)
+	return c.Redirect(http.StatusFound,"/")
 }
 
 func (s *server) signoutHandler(c echo.Context) error {
@@ -66,4 +63,3 @@ func (s *server) willSigninHandler(c echo.Context) error {
 func (s *server) signinHandler(c echo.Context) error {
 	return nil
 }
-
