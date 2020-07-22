@@ -53,7 +53,12 @@ func (s *server) signupHandler(c echo.Context) error {
 }
 
 func (s *server) signoutHandler(c echo.Context) error {
-	return nil
+	c.SetCookie(&http.Cookie{
+		Name:	sessionKey,
+		Value:	"",
+		Expires: time.Unix(0, 0),
+	})
+	return c.Redirect(http.StatusFound, "/")
 }
 
 func (s *server) willSigninHandler(c echo.Context) error {
