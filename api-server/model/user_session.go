@@ -1,11 +1,13 @@
 package model
 
-import "time"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
 
 type UserSession struct {
-	UserId   	uint64 `db:"user_id"`
-	Token 		string `db:"token"`
-	ExpiresAt 	time.Time `db:"expires_at"`
-	CreatedAt 	time.Time `db:"created_at"`
-	UpdatedAt 	time.Time `db:"updated_at"`
+	gorm.Model
+	UserID   	uint
+	Token 		string
+	ExpiresAt 	time.Time
 }

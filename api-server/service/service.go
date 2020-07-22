@@ -14,7 +14,7 @@ func init() {
 type MeibunApp interface {
 	CreateNewUser(name string, email string, password string) error
 	FindUserByEmail(email string) (*model.User, error)
-	CreateNewToken(userID uint64, expiresAt time.Time) (string, error)
+	CreateNewToken(userID uint, expiresAt time.Time) (string, error)
 	FindUserByToken(token string) (*model.User, error)
 	LoginUser(email string, password string) (bool, error)
 	Close() error
