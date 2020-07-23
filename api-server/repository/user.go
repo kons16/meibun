@@ -13,6 +13,12 @@ func (r *repository) CreateNewUser(name string, email string, passwordHash strin
 		Email: email,
 		PasswordHash: passwordHash,
 	}
+	// 同じemailで登録したユーザーがいないかどうかチェック
+	findedUser, _ := r.FindUserByEmail(email)
+	if findedUser != nil {
+		return nil
+	}
+
 	if dbc := r.db.Create(&user); dbc.Error != nil {
 		return dbc.Error
 	}
