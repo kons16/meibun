@@ -4,10 +4,12 @@ import (
 	"github.com/kons16/meibun/api-server/service"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"html/template"
+	"io"
 	"net/http"
 )
 
-const sessionKey = ""
+const sessionKey = "TEST_SESSION_KEY"
 
 type Server interface {
 	Handler() *echo.Echo
@@ -19,6 +21,17 @@ type server struct {
 
 func NewServer(app service.MeibunApp) Server {
 	return &server{app: app}
+}
+
+type TemplateRenderer struct {
+	templates *template.Template
+}
+
+func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	if viewContext, isMap := data.(map[string]interface{}); isMap {
+		viewContext["reverse"] = c.Echo().Reverse
+	}
+	return t.templates.ExecuteTemplate(w, name, data)
 }
 
 func (s *server) Handler() *echo.Echo {
@@ -33,6 +46,11 @@ func (s *server) Handler() *echo.Echo {
 		HSTSMaxAge:            3600,
 		ContentSecurityPolicy: "default-src 'self'",
 	}))
+
+	renderer := &TemplateRenderer{
+		templates: template.Must(template.ParseGlob("templates/*.html")),
+	}
+	e.Renderer = renderer
 
 	e.GET("/", s.indexHandler)
 	e.GET("/test", s.testHandler)
@@ -50,7 +68,12 @@ func (s *server) Handler() *echo.Echo {
 // indexHandler は GET / に対応
 func (s *server) indexHandler(c echo.Context) error {
 	user := s.findUser(c)
+	/*
 	return c.JSON(http.StatusOK, map[string]interface{}{
+		"User":    user,
+	})
+	*/
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
 		"User":    user,
 	})
 }

@@ -61,7 +61,7 @@ func (r *repository) CreateNewToken(userID uint, token string, expiresAt time.Ti
 // tokenをもとにuserのid,nameを取得し、model.Userにマッピング
 func (r *repository) FindUserByToken(token string) (*model.User, error) {
 	var user model.User
-	dbc := r.db.Raw("SELECT id,name FROM user JOIN user_session ON user.id = user_session.user_id WHERE user_session.token = ? && user_session.expires_at > ?",
+	dbc := r.db.Raw("SELECT users.id, users.name FROM users JOIN user_sessions ON users.id = user_sessions.user_id WHERE user_sessions.token = ? && user_sessions.expires_at > ?",
 		token, time.Now()).Scan(&user)
 	if dbc.Error != nil {
 		return nil, dbc.Error

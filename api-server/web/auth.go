@@ -16,7 +16,8 @@ func (s *server) testHandler(c echo.Context) error {
 
 // willSignupHandler は GET /signup に対応
 func (s *server) willSignupHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, nil)
+	// return c.JSON(http.StatusOK, nil)
+	return c.Render(http.StatusOK, "signup.html", nil)
 }
 
 // signupHandler は POST /signup に対応
@@ -64,7 +65,8 @@ func (s *server) signoutHandler(c echo.Context) error {
 
 // willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, nil)
+	// return c.JSON(http.StatusOK, nil)
+	return c.Render(http.StatusOK, "signin.html", nil)
 }
 
 // signinHandler は　POST /signin に対応
