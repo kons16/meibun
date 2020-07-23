@@ -22,9 +22,9 @@ func (s *server) willSignupHandler(c echo.Context) error {
 // signupHandler は POST /signup に対応
 func (s *server) signupHandler(c echo.Context) error {
 	params := new(struct {
-		Name		string
-		Email		string
-		Password	string
+		Name		string `json:"name" form:"name"`
+		Email		string `json:"email" form:"email"`
+		Password	string `json:"password" form:"password"`
 	})
 	c.Bind(params)
 
@@ -64,10 +64,36 @@ func (s *server) signoutHandler(c echo.Context) error {
 
 // willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
-	return nil
+	return c.JSON(http.StatusOK, nil)
 }
 
 // signinHandler は　POST /signin に対応
 func (s *server) signinHandler(c echo.Context) error {
-	return nil
+	params := new(struct {
+		Email		string `json:"email" form:"email"`
+		Password	string `json:"password" form:"password"`
+	})
+	c.Bind(params)
+
+	if ok, err := s.app.LoginUser(params.Email, params.Password); err != nil || !ok {
+		return err
+	}
+
+	user, err := s.app.FindUserByEmail(params.Email)
+	if err != nil {
+		return err
+	}
+
+	expiresAt := time.Now().Add(24 * time.Hour)
+	token, err := s.app.CreateNewToken(user.ID, expiresAt)
+	if err != nil {
+		return err
+	}
+	c.SetCookie(&http.Cookie{
+		Name:	sessionKey,
+		Value:	token,
+		Expires: expiresAt,
+	})
+
+	return c.Redirect(http.StatusFound, "/")
 }
