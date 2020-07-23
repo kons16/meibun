@@ -34,7 +34,7 @@ func generateToken() string {
 }
 
 // tokenを生成し、user_sessionに挿入する
-func (app *meibunApp) CreateNewToken(userID uint64, expiresAt time.Time) (string, error) {
+func (app *meibunApp) CreateNewToken(userID uint, expiresAt time.Time) (string, error) {
 	token := generateToken()
 	if err := app.repo.CreateNewToken(userID, token, expiresAt); err != nil {
 		return "", err

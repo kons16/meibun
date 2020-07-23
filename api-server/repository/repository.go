@@ -24,7 +24,7 @@ type repository struct {
 }
 
 func New(dsn string) (Repository, error) {
-	if err := godotenv.Load(fmt.Sprintf("../%s.env", os.Getenv("GO_ENV"))); err != nil {
+	if err := godotenv.Load(); err != nil {
 		return nil, err
 	}
 
