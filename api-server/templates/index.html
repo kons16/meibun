@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{if .User}}
+    あなたのユーザー名: {{.User.Name}}
+    <form action="/signout" method="POST">
+        <input type="hidden" name="csrf_token" value="{{.CsrfToken}}">
+        <input type="submit" value="ログアウト"/>
+    </form>
+{{else}}
+    <a href="/signup">ユーザー登録</a>
+    <a href="/signin">ログイン</a>
+{{end}}
+</body>
+</html>
