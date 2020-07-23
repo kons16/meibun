@@ -67,12 +67,11 @@ func (s *server) Handler() *echo.Echo {
 
 // indexHandler は GET / に対応
 func (s *server) indexHandler(c echo.Context) error {
-	user := s.findUser(c)
-	/*
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"User":    user,
-	})
-	*/
+	user, err := s.findUser(c)
+	if err != nil {
+		return err
+	}
+
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
 		"User":    user,
 	})
