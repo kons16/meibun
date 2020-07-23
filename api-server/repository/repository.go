@@ -40,7 +40,6 @@ func New(dsn string) (Repository, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Open mysql failed: %v", err)
 	}
-	defer db.Close()
 
 	db.AutoMigrate(&model.User{}, &model.UserSession{})
 

@@ -75,7 +75,8 @@ func (s *server) signinHandler(c echo.Context) error {
 	})
 	c.Bind(params)
 
-	if ok, err := s.app.LoginUser(params.Email, params.Password); err != nil || !ok {
+	_, err := s.app.LoginUser(params.Email, params.Password)
+	if err != nil {
 		return err
 	}
 
