@@ -49,11 +49,11 @@ func (s *server) signupHandler(c echo.Context) error {
 
 // signoutHandler は POST /signup に対応
 func (s *server) signoutHandler(c echo.Context) error {
-	c.SetCookie(&http.Cookie{
-		Name:	sessionKey,
-		Value:	"",
-		Expires: time.Unix(0, 0),
-	})
+	authHeader := c.Request().Header.Get("Authorization")
+
+	if err := s.app.LogoutUser(authHeader); err != nil {
+		return err
+	}
 	return c.Redirect(http.StatusFound, "/")
 }
 
