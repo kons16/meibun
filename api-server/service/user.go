@@ -66,3 +66,11 @@ func (app *meibunApp) LoginUser(email string, password string) (bool, error) {
 	}
 	return true, nil
 }
+
+// tokenをもとにuser_sessionsから該当するユーザーの行を削除する
+func (app *meibunApp) LogoutUser(token string) error {
+	if err := app.repo.DeleteUserSessionByToken(token); err != nil {
+		return err
+	}
+	return nil
+}

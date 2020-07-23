@@ -68,3 +68,11 @@ func (r *repository) FindUserByToken(token string) (*model.User, error) {
 	}
 	return &user, nil
 }
+
+// tokenをもとにuser_sessionの該当行を削除
+func(r *repository) DeleteUserSessionByToken(token string) error {
+	if dbc := r.db.Where("Token = ?", token).Delete(&model.UserSession{}); dbc.Error != nil {
+		return dbc.Error
+	}
+	return nil
+}

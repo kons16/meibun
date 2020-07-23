@@ -16,6 +16,7 @@ type Repository interface {
 	CreateNewToken(userID uint, token string, expiresAt time.Time) error
 	FindUserByToken(token string) (*model.User, error)
 	FindPasswordHashByEmail(email string) (string, error)
+	DeleteUserSessionByToken(token string) error
 	Close() error
 }
 

@@ -17,6 +17,7 @@ type MeibunApp interface {
 	CreateNewToken(userID uint, expiresAt time.Time) (string, error)
 	FindUserByToken(token string) (*model.User, error)
 	LoginUser(email string, password string) (bool, error)
+	LogoutUser(token string) error
 	Close() error
 }
 

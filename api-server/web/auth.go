@@ -44,13 +44,7 @@ func (s *server) signupHandler(c echo.Context) error {
 		return err
 	}
 
-	c.SetCookie(&http.Cookie{
-		Name:	sessionKey,
-		Value:	token,
-		Expires: expiresAt,
-	})
-
-	return c.Redirect(http.StatusFound,"/")
+	return c.JSON(http.StatusOK, map[string]string{"token": token})
 }
 
 // signoutHandler は POST /signup に対応
@@ -92,11 +86,6 @@ func (s *server) signinHandler(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	c.SetCookie(&http.Cookie{
-		Name:	sessionKey,
-		Value:	token,
-		Expires: expiresAt,
-	})
 
-	return c.Redirect(http.StatusFound, "/")
+	return c.JSON(http.StatusOK, map[string]string{"token": token})
 }
