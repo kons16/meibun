@@ -22,9 +22,9 @@ func (s *server) willSignupHandler(c echo.Context) error {
 // signupHandler は POST /signup に対応
 func (s *server) signupHandler(c echo.Context) error {
 	params := new(struct {
-		Name		string `form:name`
-		Email		string `form:email`
-		Password	string `form:password`
+		Name		string
+		Email		string
+		Password	string
 	})
 	c.Bind(params)
 
@@ -52,6 +52,7 @@ func (s *server) signupHandler(c echo.Context) error {
 	return c.Redirect(http.StatusFound,"/")
 }
 
+// signoutHandler は POST /signup に対応
 func (s *server) signoutHandler(c echo.Context) error {
 	c.SetCookie(&http.Cookie{
 		Name:	sessionKey,
@@ -61,10 +62,12 @@ func (s *server) signoutHandler(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/")
 }
 
+// willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
 	return nil
 }
 
+// signinHandler は　POST /signin に対応
 func (s *server) signinHandler(c echo.Context) error {
 	return nil
 }
