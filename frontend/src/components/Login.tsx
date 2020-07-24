@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import history from "../history";
 import axios from 'axios';
 
 interface State {
     email?: string
     password?: string
-    token?: string
 }
 
 // GET /signin でログイン済みなら / にリダイレクトさせ、未ログインならログインフォームを表示させる
@@ -12,12 +12,14 @@ class Login extends Component<{}, State> {
     state: State = {
         email: "",
         password: "",
-        token: ""
     };
 
-    // ログイン済みかどうかチェック
+    // ログイン済みかどうかチェックし、ログイン済みなら / にリダイレクト
     componentDidMount() {
-        console.log(localStorage.getItem('meibun_token'));
+        const token = localStorage.getItem('meibun_token');
+        if(token == ""){
+            history.push('/');
+        }
     }
 
     onChange = (e: any) => {
