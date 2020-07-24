@@ -3,39 +3,52 @@ import axios from 'axios';
 
 interface State {
     isLoggedIn: boolean
+    user: {
+        id: number,
+        name: string
+    }
 }
 
 class Menu extends Component<{}, State> {
     state: State = {
-        isLoggedIn: false
+        isLoggedIn: false,
+        user: {
+            id: 0,
+            name: "test"
+        }
     };
 
+    // GET / をしてログインしているならユーザー情報を取得する
     componentDidMount() {
         const params = {
             email: "a@a.com",
             password: "password"
         };
 
-        axios({
-            method: 'GET',
-            url: 'http://localhost:8000/',
-            //data: params
-        })
-            .then(function (response) {
-                console.log(response);
+        axios.get('http://localhost:8000/', {headers: {'Authorization': ''}})
+            .then((response) => {
+                const userData = response.data.User;
+                if(userData != null){
+                    this.setState({
+                        user: {
+                            id: userData.id,
+                            name: userData.name
+                        }
+                    })
+                }
             })
-            .catch(function (error) {
-                console.log(error);
+            .catch(() => {
+                console.log("index fail");
             });
     }
 
     render() {
         const isLoggedIn = this.state.isLoggedIn;
         let msg: string;
-        if (isLoggedIn) {
-            msg = "ログイン済みです";
+        if (this.state.user.id == 0) {
+            msg = "ログインしてません。";
         } else{
-            msg = "ログインしてません";
+            msg = "ログイン済みです。";
         }
 
         return (

@@ -52,8 +52,9 @@ func (s *server) Handler() *echo.Echo {
 // indexHandler は GET / に対応
 func (s *server) indexHandler(c echo.Context) error {
 	user, err := s.findUser(c)
+	// authHeaderが空
 	if err != nil {
-		return err
+		user = nil
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
