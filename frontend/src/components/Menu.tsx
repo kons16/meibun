@@ -17,9 +17,9 @@ class Menu extends Component<{}, State> {
         };
 
         axios({
-            method: 'POST',
-            url: 'http://localhost:8000/signin',
-            data: params
+            method: 'GET',
+            url: 'http://localhost:8000/',
+            //data: params
         })
             .then(function (response) {
                 console.log(response);

@@ -4,8 +4,6 @@ import (
 	"github.com/kons16/meibun/api-server/service"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"html/template"
-	"io"
 	"net/http"
 )
 
@@ -23,17 +21,6 @@ func NewServer(app service.MeibunApp) Server {
 	return &server{app: app}
 }
 
-type TemplateRenderer struct {
-	templates *template.Template
-}
-
-func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	if viewContext, isMap := data.(map[string]interface{}); isMap {
-		viewContext["reverse"] = c.Echo().Reverse
-	}
-	return t.templates.ExecuteTemplate(w, name, data)
-}
-
 func (s *server) Handler() *echo.Echo {
 	e := echo.New()
 
@@ -48,11 +35,6 @@ func (s *server) Handler() *echo.Echo {
 	}))
 	// ここはあとで見直す
 	e.Use(middleware.CORS())
-
-	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("templates/*.html")),
-	}
-	e.Renderer = renderer
 
 	e.GET("/", s.indexHandler)
 	e.GET("/test", s.testHandler)
