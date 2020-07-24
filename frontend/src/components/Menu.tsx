@@ -6,7 +6,6 @@ interface State {
     user: {
         id: number,
         name: string,
-        isLoggedIn: boolean
     }
 }
 
@@ -16,26 +15,21 @@ class Menu extends Component<{}, State> {
         user: {
             id: 0,
             name: "test",
-            isLoggedIn: false
         }
     };
 
     // GET / をしてログインしているならユーザー情報を取得する
     componentDidMount() {
-        const params = {
-            email: "a@a.com",
-            password: "password"
-        };
-
-        axios.get('http://localhost:8000/', {headers: {'Authorization': ''}})
+        const token = localStorage.getItem('meibun_token');
+        axios.get('http://localhost:8000/check_user', {headers: {'Authorization': token}})
             .then((response) => {
                 const userData = response.data.User;
                 if(userData != null){
                     this.setState({
+                        isLoggedIn: true,
                         user: {
-                            id: userData.id,
-                            name: userData.name,
-                            isLoggedIn: true
+                            id: userData.ID,
+                            name: userData.Name,
                         }
                     })
                 }
@@ -48,7 +42,8 @@ class Menu extends Component<{}, State> {
     render() {
         return (
             <div className="Menu">
-                Topページ
+                Topページ<br/>
+                {this.state.isLoggedIn && (<span>{this.state.user.name}</span>)}
             </div>
         );
     }
