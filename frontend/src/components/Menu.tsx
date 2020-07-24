@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 interface State {
     isLoggedIn: boolean
@@ -8,6 +9,25 @@ class Menu extends Component<{}, State> {
     state: State = {
         isLoggedIn: false
     };
+
+    componentDidMount() {
+        const params = {
+            email: "a@a.com",
+            password: "password"
+        };
+
+        axios({
+            method: 'POST',
+            url: 'http://localhost:8000/signin',
+            data: params
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     render() {
         const isLoggedIn = this.state.isLoggedIn;

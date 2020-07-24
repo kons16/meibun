@@ -6,18 +6,9 @@ import (
 	"time"
 )
 
-// testHandler は GET /test に対応
-func (s *server) testHandler(c echo.Context) error {
-	msg := map[string]string{
-		"message": "Hello!",
-	}
-	return c.JSON(http.StatusOK, msg)
-}
-
 // willSignupHandler は GET /signup に対応
 func (s *server) willSignupHandler(c echo.Context) error {
-	// return c.JSON(http.StatusOK, nil)
-	return c.Render(http.StatusOK, "signup.html", nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // signupHandler は POST /signup に対応
@@ -59,8 +50,7 @@ func (s *server) signoutHandler(c echo.Context) error {
 
 // willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
-	// return c.JSON(http.StatusOK, nil)
-	return c.Render(http.StatusOK, "signin.html", nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // signinHandler は　POST /signin に対応

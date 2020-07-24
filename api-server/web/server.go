@@ -46,6 +46,8 @@ func (s *server) Handler() *echo.Echo {
 		HSTSMaxAge:            3600,
 		ContentSecurityPolicy: "default-src 'self'",
 	}))
+	// ここはあとで見直す
+	e.Use(middleware.CORS())
 
 	renderer := &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("templates/*.html")),
@@ -75,4 +77,12 @@ func (s *server) indexHandler(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
 		"User":    user,
 	})
+}
+
+// testHandler は GET /test に対応
+func (s *server) testHandler(c echo.Context) error {
+	msg := map[string]string{
+		"message": "Hello!",
+	}
+	return c.JSON(http.StatusOK, msg)
 }
