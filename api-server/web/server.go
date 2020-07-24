@@ -74,7 +74,7 @@ func (s *server) indexHandler(c echo.Context) error {
 		return err
 	}
 
-	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+	return c.JSON(http.StatusOK, map[string]interface{}{
 		"User":    user,
 	})
 }
