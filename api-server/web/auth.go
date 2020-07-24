@@ -14,9 +14,9 @@ func (s *server) willSignupHandler(c echo.Context) error {
 // signupHandler は POST /signup に対応
 func (s *server) signupHandler(c echo.Context) error {
 	params := new(struct {
-		Name		string `json:"name" form:"name"`
-		Email		string `json:"email" form:"email"`
-		Password	string `json:"password" form:"password"`
+		Name		string `json:"name"`
+		Email		string `json:"email"`
+		Password	string `json:"password"`
 	})
 	c.Bind(params)
 
@@ -50,14 +50,23 @@ func (s *server) signoutHandler(c echo.Context) error {
 
 // willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, nil)
+	_, err := s.findUser(c)
+	isLoggedIn := true
+	// authHeaderが空のとき(未ログイン)
+	if err != nil {
+		isLoggedIn = false
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"isLoggedIn":    isLoggedIn,
+	})
 }
 
 // signinHandler は　POST /signin に対応
 func (s *server) signinHandler(c echo.Context) error {
 	params := new(struct {
-		Email		string `json:"email" form:"email"`
-		Password	string `json:"password" form:"password"`
+		Email		string `json:"email"`
+		Password	string `json:"password"`
 	})
 	c.Bind(params)
 

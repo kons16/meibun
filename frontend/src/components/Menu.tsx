@@ -5,7 +5,8 @@ interface State {
     isLoggedIn: boolean
     user: {
         id: number,
-        name: string
+        name: string,
+        isLoggedIn: boolean
     }
 }
 
@@ -14,7 +15,8 @@ class Menu extends Component<{}, State> {
         isLoggedIn: false,
         user: {
             id: 0,
-            name: "test"
+            name: "test",
+            isLoggedIn: false
         }
     };
 
@@ -32,7 +34,8 @@ class Menu extends Component<{}, State> {
                     this.setState({
                         user: {
                             id: userData.id,
-                            name: userData.name
+                            name: userData.name,
+                            isLoggedIn: true
                         }
                     })
                 }
@@ -43,21 +46,12 @@ class Menu extends Component<{}, State> {
     }
 
     render() {
-        const isLoggedIn = this.state.isLoggedIn;
-        let msg: string;
-        if (this.state.user.id == 0) {
-            msg = "ログインしてません。";
-        } else{
-            msg = "ログイン済みです。";
-        }
-
         return (
             <div className="Menu">
-                {msg}
+                Topページ
             </div>
         );
     }
 }
 
 export default Menu;
-
