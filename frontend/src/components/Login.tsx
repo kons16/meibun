@@ -4,13 +4,15 @@ import axios from 'axios';
 interface State {
     email?: string
     password?: string
+    token?: string
 }
 
 // GET /signin でログイン済みなら / にリダイレクトさせ、未ログインならログインフォームを表示させる
 class Login extends Component<{}, State> {
     state: State = {
         email: "",
-        password: ""
+        password: "",
+        token: ""
     };
 
     // ログイン済みかどうかチェック
@@ -24,32 +26,27 @@ class Login extends Component<{}, State> {
         });
     }
 
-    // formのsubmitが呼ばれたときの関数  /signin に POSTする
+    // ログインボタンが呼ばれたときの関数  /signin に POSTする
     handleFormSubmit = () => {
         axios.post('http://localhost:8000/signin',
             {'email': this.state.email, 'password': this.state.password})
             .then((response) => {
-                const token = response.data;
-                localStorage.setItem('meibun_token', token);
+                localStorage.setItem('meibun_token', response.data.token);
             })
             .catch(() => {
-                console.log("login fail");
+                console.log("index fail");
             });
     }
 
     render() {
         return (
-            <form onSubmit={this.handleFormSubmit}>
-                <div>
-                    <span className="label">メールアドレス</span>
-                    <input type="text" name="email" onChange={this.onChange} />
-                </div>
-                <div>
-                    <span className="label">パスワード</span>
-                    <input type="password" name="password" onChange={this.onChange} />
-                </div>
-                <button type="submit">ログイン</button>
-            </form>
+            <div>
+                <span className="label">メールアドレス</span>
+                <input type="text" name="email" onChange={this.onChange} />
+                <span className="label">パスワード</span>
+                <input type="password" name="password" onChange={this.onChange} />
+                <button onClick={this.handleFormSubmit}>ログイン</button>
+            </div>
         );
     }
 }
