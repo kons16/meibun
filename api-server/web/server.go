@@ -36,7 +36,7 @@ func (s *server) Handler() *echo.Echo {
 	// ここはあとで見直す
 	e.Use(middleware.CORS())
 
-	e.GET("/", s.indexHandler)
+	e.GET("/check_user", s.checkUserHandler)
 	e.GET("/test", s.testHandler)
 	e.GET("/signup", s.willSignupHandler)
 	e.POST("/signup", s.signupHandler)
@@ -49,8 +49,8 @@ func (s *server) Handler() *echo.Echo {
 	return e
 }
 
-// indexHandler は GET / に対応
-func (s *server) indexHandler(c echo.Context) error {
+// checkUserHandler は GET /check_user に対応
+func (s *server) checkUserHandler(c echo.Context) error {
 	user, err := s.findUser(c)
 	// authHeaderが空
 	if err != nil {
