@@ -14,11 +14,22 @@ class Login extends Component<{}, State> {
         password: "",
     };
 
-    // ログイン済みかどうかチェックし、ログイン済みなら / にリダイレクト
+    // tokenの有無でログイン済みかどうかチェックし、ログイン済みなら / にリダイレクト.
+    // tokenは有効期限が切れてないか確認する
     componentDidMount() {
         const token = localStorage.getItem('meibun_token');
-        if(token == ""){
-            history.push('/');
+        if(token !== "") {
+            axios.get('http://localhost:8000/check_user', {headers: {'Authorization': token}})
+                .then((response) => {
+                    const userData = response.data.User;
+                    if (userData == null) {
+                        localStorage.setItem('meibun_token', "");
+                        history.push('/')
+                    }
+                })
+                .catch(() => {
+                    console.log("index fail");
+                });
         }
     }
 
