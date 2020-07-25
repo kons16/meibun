@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import history from "../history";
+import {Link} from "react-router-dom";
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import history from "../history";
 
 interface State {
     email?: string
@@ -22,9 +24,10 @@ class Login extends Component<{}, State> {
             axios.get('http://localhost:8000/check_user', {headers: {'Authorization': token}})
                 .then((response) => {
                     const userData = response.data.User;
-                    if (userData == null) {
-                        localStorage.setItem('meibun_token', "");
+                    if (userData !== null) {
                         history.push('/')
+                    } else {
+                        localStorage.setItem('meibun_token', "");
                     }
                 })
                 .catch(() => {
@@ -45,20 +48,32 @@ class Login extends Component<{}, State> {
             {'email': this.state.email, 'password': this.state.password})
             .then((response) => {
                 localStorage.setItem('meibun_token', response.data.token);
+                // ここをあとで修正
+                history.push('/');
             })
             .catch(() => {
-                console.log("index fail");
+                console.log("submit fail");
             });
     }
 
     render() {
         return (
             <div>
-                <span className="label">メールアドレス</span>
-                <input type="text" name="email" onChange={this.onChange} />
-                <span className="label">パスワード</span>
-                <input type="password" name="password" onChange={this.onChange} />
-                <button onClick={this.handleFormSubmit}>ログイン</button>
+                <div id="form">
+                    <div>
+                        <span className="label">メールアドレス</span>
+                        <input type="text" name="email" onChange={this.onChange} />
+                    </div>
+                    <div>
+                        <span className="label">パスワード</span>
+                        <input type="password" name="password" onChange={this.onChange} />
+                    </div>
+                    <Button variant="contained" color="primary"　style={{ marginTop: 10, width: 100 }}
+                            onClick={this.handleFormSubmit} >
+                        ログイン
+                    </Button>
+                </div>
+                <Link to="/">ホームへ</Link>
             </div>
         );
     }
