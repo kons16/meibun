@@ -33,8 +33,46 @@ func (s *server) Handler() *echo.Echo {
 		HSTSMaxAge:            3600,
 		ContentSecurityPolicy: "default-src 'self'",
 	}))
-	// ここはあとで見直す
-	e.Use(middleware.CORS())
+
+	// CORSの設定
+	var allowedOrigins = []string{
+		"http://localhost:3000",
+	}
+	e.Use(
+		middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowCredentials: true,
+			AllowOrigins:     allowedOrigins,
+			AllowHeaders: []string{
+				echo.HeaderAccessControlAllowHeaders,
+				echo.HeaderContentType,
+				echo.HeaderContentLength,
+				echo.HeaderAcceptEncoding,
+				echo.HeaderXCSRFToken,
+				echo.HeaderAuthorization,
+			},
+			AllowMethods: []string{
+				http.MethodGet,
+				http.MethodPost,
+				http.MethodDelete,
+			},
+			MaxAge: 86400,
+		}),
+	)
+
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			origin := c.Request().Header.Get(echo.HeaderOrigin)
+			// 許可しているOriginの中で、リクエストヘッダのOriginと一致するものがあれば処理を継続
+			for _, o := range allowedOrigins {
+				if origin == o {
+					return next(c)
+				}
+			}
+			// 一致しているものがなかった場合は403(Forbidden)を返却する
+			return c.String(http.StatusForbidden, "forbidden")
+		}
+	})
+
 
 	e.GET("/check_user", s.checkUserHandler)
 	e.GET("/test", s.testHandler)
