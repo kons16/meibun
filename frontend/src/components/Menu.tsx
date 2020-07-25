@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 interface State {
     isLoggedIn: boolean
@@ -43,7 +44,14 @@ class Menu extends Component<{}, State> {
         return (
             <div className="Menu">
                 Topページ<br/>
-                {this.state.isLoggedIn && (<span>{this.state.user.name}</span>)}
+                {
+                    this.state.isLoggedIn?
+                    (<span>{this.state.user.name}</span>
+                    )
+                    :
+                    (<Link to="/login">ログイン</Link>
+                    )
+                }
             </div>
         );
     }
