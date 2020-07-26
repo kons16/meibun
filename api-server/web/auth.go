@@ -40,14 +40,17 @@ func (s *server) signupHandler(c echo.Context) error {
 		"Name": sessionKey, "token": token, "expiresAt": expiresAt.Format(layout)})
 }
 
-// signoutHandler は POST /signup に対応
+// signoutHandler は POST /signout に対応
 func (s *server) signoutHandler(c echo.Context) error {
-	authHeader := c.Request().Header.Get("Authorization")
-
-	if err := s.app.LogoutUser(authHeader); err != nil {
-		return err
+	/*
+	TODO: user_sessionから該当レコードの削除処理
+	cookie, err := c.Cookie(sessionKey)
+	if err == nil && cookie.Value != "" {
 	}
-	return c.Redirect(http.StatusFound, "/")
+	*/
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"Name": sessionKey})
 }
 
 // willSigninHandler は　GET /signin に対応

@@ -39,8 +39,8 @@ class Signup extends Component<{}, State> {
                     if (response.data.User !== null) {
                         history.push('/')
                     } else {
-                        // 有効期限が切れたtokenまたはログインしていないとき
-                        document.cookie = `${response.data.name}=""; expires=0`;
+                        // 有効期限が切れたtokenまたはログインしていないときcookieを削除
+                        document.cookie = `${response.data.name}=; max-age=0`;
                     }
                 })
                 .catch(() => {
