@@ -35,7 +35,9 @@ func (s *server) signupHandler(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"token": token})
+	var layout = "2006-01-02 15:04:05"
+	return c.JSON(http.StatusOK, map[string]string{
+		"Name": sessionKey, "token": token, "expiresAt": expiresAt.Format(layout)})
 }
 
 // signoutHandler は POST /signup に対応
