@@ -32,12 +32,12 @@ class Login extends Component<{}, State> {
         }
 
         if(token !== "") {
-            axios.get('http://localhost:8000/check_user', {withCredentials: true})
+            axios.get('http://localhost:8000/signin', {withCredentials: true})
                 .then((response) => {
                     if (response.data.User !== null) {
                         history.push('/')
                     } else {
-                        // 有効期限が切れたtokenまたはログインしていないとき
+                        // 有効期限が切れたtoken,またはログインしていないとき
                         document.cookie = `${response.data.name}=""; expires=0`;
                     }
                 })

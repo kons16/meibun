@@ -74,7 +74,7 @@ func (s *server) Handler() *echo.Echo {
 	})
 
 
-	e.GET("/check_user", s.checkUserHandler)
+	e.GET("/", s.indexHandler)
 	e.GET("/test", s.testHandler)
 	e.GET("/signup", s.willSignupHandler)
 	e.POST("/signup", s.signupHandler)
@@ -87,8 +87,8 @@ func (s *server) Handler() *echo.Echo {
 	return e
 }
 
-// checkUserHandler は GET /check_user に対応
-func (s *server) checkUserHandler(c echo.Context) error {
+// indexHandler は GET / に対応
+func (s *server) indexHandler(c echo.Context) error {
 	user := s.findUser(c)
 
 	data := map[string]interface{}{

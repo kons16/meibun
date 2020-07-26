@@ -8,7 +8,13 @@ import (
 
 // willSignupHandler は GET /signup に対応
 func (s *server) willSignupHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, nil)
+	user := s.findUser(c)
+
+	data := map[string]interface{}{
+		"Name":    sessionKey,
+		"User":    user,
+	}
+	return c.JSON(http.StatusOK, data)
 }
 
 // signupHandler は POST /signup に対応
@@ -56,15 +62,12 @@ func (s *server) signoutHandler(c echo.Context) error {
 // willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
 	user := s.findUser(c)
-	isLoggedIn := true
-	// authHeaderが空のとき(未ログイン)
-	if user != nil {
-		isLoggedIn = false
-	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"isLoggedIn":    isLoggedIn,
-	})
+	data := map[string]interface{}{
+		"Name":    sessionKey,
+		"User":    user,
+	}
+	return c.JSON(http.StatusOK, data)
 }
 
 // signinHandler は　POST /signin に対応

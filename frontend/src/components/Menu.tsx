@@ -20,9 +20,9 @@ class Menu extends Component<{}, State> {
         }
     };
 
-    // GET /check_user をしてログインしているならユーザー情報を取得する
+    // GET / でログインしているならユーザー情報を取得する
     componentDidMount() {
-        axios.get('http://localhost:8000/check_user', {withCredentials: true})
+        axios.get('http://localhost:8000/', {withCredentials: true})
             .then((response) => {
                 const userData = response.data.User;
                 if(userData != null){
