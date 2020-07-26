@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import history from "../history";
+import history from '../history';
 
 interface State {
     isLoggedIn: boolean
@@ -55,6 +54,14 @@ class Menu extends Component<{}, State> {
             });
     }
 
+    handleToLogin = () => {
+        history.push('/login')
+    }
+
+    handleToSignup = () => {
+        history.push('/signup')
+    }
+
     render() {
         return (
             <div className="Menu">
@@ -73,8 +80,8 @@ class Menu extends Component<{}, State> {
                     } else {
                         return (
                             <div>
-                                <Link to="/login">ログイン</Link>
-                                <Link to="/signup">新規登録</Link>
+                                <Button onClick={this.handleToLogin}>ログイン</Button>
+                                <Button onClick={this.handleToSignup}>新規登録</Button>
                             </div>
                         );
                     }
