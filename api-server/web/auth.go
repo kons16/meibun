@@ -50,10 +50,10 @@ func (s *server) signoutHandler(c echo.Context) error {
 
 // willSigninHandler は　GET /signin に対応
 func (s *server) willSigninHandler(c echo.Context) error {
-	_, err := s.findUser(c)
+	user := s.findUser(c)
 	isLoggedIn := true
 	// authHeaderが空のとき(未ログイン)
-	if err != nil {
+	if user != nil {
 		isLoggedIn = false
 	}
 
@@ -86,5 +86,7 @@ func (s *server) signinHandler(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"token": token})
+	var layout = "2006-01-02 15:04:05"
+	return c.JSON(http.StatusOK, map[string]string{
+		"Name": sessionKey, "token": token, "expiresAt": expiresAt.Format(layout)})
 }

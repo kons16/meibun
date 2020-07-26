@@ -19,15 +19,26 @@ class Login extends Component<{}, State> {
     // tokenの有無でログイン済みかどうかチェックし、ログイン済みなら / にリダイレクト.
     // tokenは有効期限が切れてないか確認する
     componentDidMount() {
-        const token = localStorage.getItem('meibun_token');
+        const cookies = document.cookie;
+        const cookiesArray = cookies.split(';');
+        let token = "";
+
+        // cookieの読み込み
+        for(let c of cookiesArray){
+            let cArray = c.split('=');
+            if( cArray[0] === 'Value'){
+                token = cArray[1]
+            }
+        }
+
         if(token !== "") {
-            axios.get('http://localhost:8000/check_user', {headers: {'Authorization': token}})
+            axios.get('http://localhost:8000/check_user', {withCredentials: true})
                 .then((response) => {
-                    const userData = response.data.User;
-                    if (userData !== null) {
+                    if (response.data.User !== null) {
                         history.push('/')
                     } else {
-                        localStorage.setItem('meibun_token', "");
+                        // 有効期限が切れたtokenまたはログインしていないとき
+                        document.cookie = `${response.data.name}=""; expires=0`;
                     }
                 })
                 .catch(() => {
@@ -47,7 +58,10 @@ class Login extends Component<{}, State> {
         axios.post('http://localhost:8000/signin',
             {'email': this.state.email, 'password': this.state.password})
             .then((response) => {
-                localStorage.setItem('meibun_token', response.data.token);
+                const name = response.data.Name;
+                const token = response.data.token;
+                const expiresAt = response.data.expiresAt;
+                document.cookie = `${name}=${token}; expires=${expiresAt}`;
                 // ここをあとで修正
                 history.push('/');
             })

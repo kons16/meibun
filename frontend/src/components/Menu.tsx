@@ -21,8 +21,7 @@ class Menu extends Component<{}, State> {
 
     // GET / をしてログインしているならユーザー情報を取得する
     componentDidMount() {
-        const token = localStorage.getItem('meibun_token');
-        axios.get('http://localhost:8000/check_user', {headers: {'Authorization': token}})
+        axios.get('http://localhost:8000/check_user', {withCredentials: true})
             .then((response) => {
                 const userData = response.data.User;
                 if(userData != null){

@@ -1,24 +1,19 @@
 package web
 
 import (
-	"errors"
 	"github.com/kons16/meibun/api-server/model"
 	"github.com/labstack/echo"
 	"net/http"
 )
 
 // tokenからユーザー情報(id, name)を取得する
-func(s *server) findUser(c echo.Context) (*model.User, error) {
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader == "" {
-		return nil, errors.New("authHeader is null")
+func(s *server) findUser(c echo.Context) *model.User {
+	cookie, err := c.Cookie(sessionKey)
+	if err == nil && cookie.Value != "" {
+		user, _ := s.app.FindUserByToken(cookie.Value)
+		return user
 	}
-
-	user, err := s.app.FindUserByToken(authHeader)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+	return nil
 }
 
 // getUserHandler は　GET /users/:id に対応

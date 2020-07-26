@@ -89,21 +89,20 @@ func (s *server) Handler() *echo.Echo {
 
 // checkUserHandler は GET /check_user に対応
 func (s *server) checkUserHandler(c echo.Context) error {
-	user, err := s.findUser(c)
-	// authHeaderが空
-	if err != nil {
-		user = nil
-	}
+	user := s.findUser(c)
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
+	data := map[string]interface{}{
+		"Name":    sessionKey,
 		"User":    user,
-	})
+	}
+	return c.JSON(http.StatusOK, data)
 }
 
 // testHandler は GET /test に対応
 func (s *server) testHandler(c echo.Context) error {
 	msg := map[string]string{
-		"message": "Hello!",
+		"Name": "TEST",
+		"Value": "token-aaa",
 	}
 	return c.JSON(http.StatusOK, msg)
 }
