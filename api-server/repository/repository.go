@@ -17,6 +17,8 @@ type Repository interface {
 	FindUserByToken(token string) (*model.User, error)
 	FindPasswordHashByEmail(email string) (string, error)
 	DeleteUserSessionByToken(token string) error
+
+	CreateNewBook(sentence string, title string, author string, pages int, userId uint) error
 	Close() error
 }
 
@@ -43,6 +45,7 @@ func New(dsn string) (Repository, error) {
 	}
 
 	db.AutoMigrate(&model.User{}, &model.UserSession{})
+	db.AutoMigrate(&model.Books{}, &model.Quotations{})
 
 	return &repository{db: db}, nil
 }

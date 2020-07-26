@@ -10,4 +10,6 @@ type User struct {
 	Email 			string
 	PasswordHash 	string
 	UserSession 	UserSession
+	Books			[]Books
+	Quotations		[]Quotations
 }

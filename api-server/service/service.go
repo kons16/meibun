@@ -18,6 +18,8 @@ type MeibunApp interface {
 	FindUserByToken(token string) (*model.User, error)
 	LoginUser(email string, password string) (bool, error)
 	LogoutUser(token string) error
+
+	CreateNewBook(sentence string, title string, author string, pages int, userId uint) error
 	Close() error
 }
 

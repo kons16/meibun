@@ -84,6 +84,8 @@ func (s *server) Handler() *echo.Echo {
 
 	e.GET("/users/:id", s.getUserHandler)
 
+	e.POST("/post_book", s.postBookHandler)
+
 	return e
 }
 
