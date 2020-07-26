@@ -43,14 +43,11 @@ class Menu extends Component<{}, State> {
         return (
             <div className="Menu">
                 Topページ<br/>
-                {
-                    this.state.isLoggedIn?
-                    (<span>{this.state.user.name}</span>
-                    )
-                    :
-                    (<Link to="/login">ログイン</Link>
-                    )
+                {this.state.isLoggedIn &&
+                    <span>{this.state.user.name}</span>
                 }
+                <Link to="/login">ログイン</Link> <br/>
+                <Link to="/signup">新規登録</Link>
             </div>
         );
     }
