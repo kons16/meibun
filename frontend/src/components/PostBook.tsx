@@ -30,9 +30,12 @@ class PostBook extends Component<{}, State> {
 
     // 名文情報をpostする
     handleFormSubmit = () => {
-        axios.post('http://localhost:8000/new_book',
-            {'sentence': this.state.sentence, 'title': this.state.title, 'author': this.state.author, 'pages': this.state.pages})
+        axios.post('http://localhost:8000/post_book',
+            {'sentence': this.state.sentence, 'title': this.state.title, 'author': this.state.author, 'pages': this.state.pages},
+            {withCredentials: true})
             .then((response) => {
+                /// TODO
+                console.log("ok");
             })
             .catch(() => {
                 console.log("post fail");
@@ -44,20 +47,24 @@ class PostBook extends Component<{}, State> {
             <div>
                 <div id="form">
                     <div>
-                        <span className="label">名前</span>
-                        <input type="text" name="name" onChange={this.onChange} />
+                        <span className="label">名文</span>
+                        <input type="text" name="sentence" onChange={this.onChange} />
                     </div>
                     <div>
-                        <span className="label">メールアドレス</span>
-                        <input type="text" name="email" onChange={this.onChange} />
+                        <span className="label">本のタイトル</span>
+                        <input type="text" name="title" onChange={this.onChange} />
                     </div>
                     <div>
-                        <span className="label">パスワード</span>
-                        <input type="password" name="password" onChange={this.onChange} />
+                        <span className="label">ページ数</span>
+                        <input type="text" name="pages" onChange={this.onChange} />
+                    </div>
+                    <div>
+                        <span className="label">著者名</span>
+                        <input type="text" name="author" onChange={this.onChange} />
                     </div>
                     <Button variant="contained" color="primary"　style={{ marginTop: 10, width: 100 }}
                             onClick={this.handleFormSubmit} >
-                        新規登録
+                        追加する
                     </Button>
                 </div>
                 <Link to="/">ホームへ</Link>
