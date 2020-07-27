@@ -6,6 +6,7 @@ import Menu from './components/Menu';
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import PostBook from "./components/PostBook";
+import MyPage from "./components/MyPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/post_book" component={PostBook} />
+                <Route path="/users/:id" component={MyPage} />
             </div>
         </Router>
     </div>

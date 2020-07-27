@@ -24,11 +24,12 @@ class Signup extends Component<{}, State> {
         const cookies = document.cookie;
         const cookiesArray = cookies.split(';');
         let token = "";
+        const sessionName = "TEST_SESSION_KEY";
 
         // cookieの読み込み
         for(let c of cookiesArray){
             let cArray = c.split('=');
-            if( cArray[0] === 'Value'){
+            if( cArray[0] === sessionName){
                 token = cArray[1]
             }
         }

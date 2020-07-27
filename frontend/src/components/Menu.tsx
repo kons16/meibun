@@ -54,10 +54,17 @@ class Menu extends Component<{}, State> {
             });
     }
 
+    // マイページ /users/:id に遷移
+    handleToMyPage = () => {
+        history.push(`/users/${this.state.user.id}`)
+    }
+
+    // ログイン /login に遷移
     handleToLogin = () => {
         history.push('/login')
     }
 
+    // 新規登録 /signup に遷移
     handleToSignup = () => {
         history.push('/signup')
     }
@@ -74,6 +81,11 @@ class Menu extends Component<{}, State> {
                                 <Button variant="contained" color="primary"　style={{ marginTop: 10, width: 110 }}
                                         onClick={this.handleSignout} >
                                     ログアウト
+                                </Button>
+
+                                <Button variant="contained" color="primary"　style={{ marginTop: 10, marginLeft: 10, width: 120 }}
+                                        onClick={this.handleToMyPage} >
+                                    マイページへ
                                 </Button>
                             </div>
                         )

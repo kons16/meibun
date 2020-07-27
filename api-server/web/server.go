@@ -76,6 +76,7 @@ func (s *server) Handler() *echo.Echo {
 
 	e.GET("/", s.indexHandler)
 	e.GET("/test", s.testHandler)
+	e.GET("/get_session_name", s.getSessionNameHandler)
 	e.GET("/signup", s.willSignupHandler)
 	e.POST("/signup", s.signupHandler)
 	e.GET("/signin", s.willSigninHandler)
@@ -88,8 +89,8 @@ func (s *server) Handler() *echo.Echo {
 	return e
 }
 
-// indexHandler は GET / に対応
-func (s *server) indexHandler(c echo.Context) error {
+// GET / に対応
+func(s *server) indexHandler(c echo.Context) error {
 	user := s.findUser(c)
 
 	data := map[string]interface{}{
@@ -99,8 +100,15 @@ func (s *server) indexHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
-// testHandler は GET /test に対応
-func (s *server) testHandler(c echo.Context) error {
+// GET /get_session_name に対応
+func(s *server) getSessionNameHandler(c echo.Context) error {
+	return c.JSON(http.StatusOK, map[string]string{
+		"Name": sessionKey,
+	})
+}
+
+// GET /test に対応
+func(s *server) testHandler(c echo.Context) error {
 	msg := map[string]string{
 		"Name": "TEST",
 		"Value": "token-aaa",
