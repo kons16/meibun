@@ -2,6 +2,8 @@ package web
 
 import (
 	"github.com/labstack/echo"
+	"net/http"
+	"strconv"
 )
 
 // POST /post_book に対応
@@ -23,4 +25,18 @@ func(s *server) postBookHandler(c echo.Context) error {
 		}
 	}
 	return nil
+}
+
+// GET /users/:id に対応。 userIDに紐づくbooksレコードを全件取得
+func (s *server) getUserBooksHandler(c echo.Context) error {
+	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	books, err := s.app.GetAllBooksByUserID(uint(id))
+	if err != nil {
+		return echo.ErrNotFound
+	}
+
+	data := map[string]interface{}{
+		"Books":    books,
+	}
+	return c.JSON(http.StatusOK, data)
 }

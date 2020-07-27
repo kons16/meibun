@@ -82,9 +82,8 @@ func (s *server) Handler() *echo.Echo {
 	e.POST("/signin", s.signinHandler)
 	e.POST("/signout", s.signoutHandler)
 
-	e.GET("/users/:id", s.getUserHandler)
-
 	e.POST("/post_book", s.postBookHandler)
+	e.GET("/users/:id", s.getUserBooksHandler)
 
 	return e
 }
