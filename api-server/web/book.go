@@ -27,9 +27,9 @@ func(s *server) postBookHandler(c echo.Context) error {
 	return nil
 }
 
-// GET /users/:id に対応。 userIDに紐づくbooksレコードを全件取得
+// GET /users/books に対応。 userIDに紐づくbooksレコードを全件取得
 func (s *server) getUserBooksHandler(c echo.Context) error {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
+	id, _ := strconv.ParseUint(c.QueryParam("id"), 10, 32)
 	books, err := s.app.GetAllBooksByUserID(uint(id))
 	if err != nil {
 		return echo.ErrNotFound

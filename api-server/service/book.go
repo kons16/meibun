@@ -8,6 +8,6 @@ func(app *meibunApp) CreateNewBook(sentence string, title string, author string,
 }
 
 // userIDに紐づくbooksを返す
-func(app *meibunApp) GetAllBooksByUserID(userID uint) (*model.Books, error) {
+func(app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 	return app.repo.GetAllBooksByUserID(userID)
 }

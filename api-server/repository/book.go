@@ -21,9 +21,11 @@ func(r *repository) CreateNewBook(sentence string, title string, author string, 
 }
 
 // userIDに紐づくbookレコードを全て取得
-func(r *repository) GetAllBooksByUserID(userID uint) (*model.Books, error) {
-	var books model.Books
-	if dbc := r.db.Model(r.db.First(&model.User{}, userID)).Related(&books); dbc.Error != nil {
+func(r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
+	var books []model.Books
+	var user model.User
+	r.db.First(&user, userID)
+	if dbc := r.db.Model(&user).Related(&books); dbc.Error != nil {
 		return nil, dbc.Error
 	}
 	return &books, nil
