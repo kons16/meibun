@@ -5,33 +5,16 @@ import axios from "axios";
 type MyPageProps = {} & RouteComponentProps<{id: string}>;
 
 interface MyPageState {
-    books: [{
-        ID: number,
-        Sentence: string,
-        Title: string,
-        Author: string,
-        Pages: number,
-        Harts: number,
-        UpdatedAd: any
-    }]
+    books: any
 }
 
 // 自分の情報を表示するマイページ
 class MyPage extends Component<MyPageProps, MyPageState> {
-    state: MyPageState = {
-        books: [{
-            ID: 0,
-            Sentence: "",
-            Title: "",
-            Author: "",
-            Pages: 0,
-            Harts: 0,
-            UpdatedAd: ""
-        }]
-    };
-
     constructor(props: MyPageProps) {
         super(props);
+        this.state = {
+            books: null
+        };
     }
 
     componentDidMount() {
@@ -39,10 +22,11 @@ class MyPage extends Component<MyPageProps, MyPageState> {
             .then((response) => {
                 const books: any[] = response.data.Books;
                 if(books != null){
-                    books.forEach((key, index) => {
-                       console.log(books[index]);
-                    });
+                    this.setState({
+                        books: books
+                    })
                 }
+                console.log(this.state.books);
             })
             .catch(() => {
                 console.log("books get fail");
@@ -57,8 +41,14 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                 <Link to="/">ホームへ</Link>
                 {(() => {
                     if (this.state.books) {
+                        const bookItems: any = [];
+                        this.state.books.forEach((key: any, index: number) => {
+                            bookItems.push(this.state.books[index].Sentence)
+                        });
+
                         return (
                             <div>
+                                {bookItems}
                             </div>
                         )
                     }
