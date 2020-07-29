@@ -37,8 +37,12 @@ class Books extends Component<BookProps, BookState> {
 
     render() {
         return (
-            <div>
-                {this.state.sentence}<br/>
+            <div id="book-component">
+                <div id="book-sentence">{this.state.sentence}</div>
+                <div id="book-title">『{this.state.title}』</div>
+                <div id="book-author">{this.state.author}</div>
+                <div id="book-pages">p.{this.state.pages}</div>
+                <div id="book-harts">♡{this.state.harts}</div>
             </div>
         );
     }

@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+/* Bookコンポーネント */
+#book-component {
+  width: 830px;
+  padding: 10px 20px 10px 20px;
+  margin: 20px auto;
+  background: #FFF;
+  border: solid 3px #6091d3;
+  border-radius: 10px;
+}
+#book-sentence {
+  font-weight: bold;
+  font-size: 20px;
+  color: darkblue;
+  margin-bottom: 18px;
+}
+#book-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+#book-author {
+  font-size: 18px;
+}
+#book-pages {
+  display: inline-block;
+}
+#book-harts {
+  margin-left: 10px;
+  display: inline-block;
+  font-weight: bold;
+  color: hotpink;
+}
