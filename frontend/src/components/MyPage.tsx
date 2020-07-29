@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, RouteComponentProps } from "react-router-dom";
 import axios from "axios";
+import Book from './Book';
 
 type MyPageProps = {} & RouteComponentProps<{id: string}>;
 
@@ -13,7 +14,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
     constructor(props: MyPageProps) {
         super(props);
         this.state = {
-            books: null
+            books: []
         };
     }
 
@@ -31,21 +32,32 @@ class MyPage extends Component<MyPageProps, MyPageState> {
             .catch(() => {
                 console.log("books get fail");
             });
-
     }
 
+    // Bookコンポーネントに各名文情報を渡いて表示
     render() {
         return (
             <div>
                 マイページです。
                 <Link to="/">ホームへ</Link>
                 {(() => {
-                    if (this.state.books) {
-                        const bookItems: any = [];
-                        this.state.books.forEach((key: any, index: number) => {
-                            bookItems.push(this.state.books[index].Sentence)
-                        });
+                    const bookItems: any = [];
+                    // console.log(this.state.books);
+                    this.state.books.forEach((key: any, index: number) => {
+                        bookItems.push(
+                            <Book
+                                key={index}
+                                id={index}
+                                sentence={this.state.books[index].Sentence}
+                                title={this.state.books[index].Title}
+                                author={this.state.books[index].Author}
+                                pages={this.state.books[index].Pages}
+                                harts={this.state.books[index].Harts}
+                            />
+                        )
+                    });
 
+                    if (this.state.books) {
                         return (
                             <div>
                                 {bookItems}
