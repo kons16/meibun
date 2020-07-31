@@ -54,9 +54,11 @@ class Menu extends Component<{}, State> {
             });
     }
 
-    // マイページ /users/:id に遷移
+    // マイページ /users/:id に遷移。ログインしている自分のIDを渡す
     handleToMyPage = () => {
-        history.push(`/users/${this.state.user.id}`)
+        history.push({
+            pathname: `/users/${this.state.user.id}`
+        })
     }
 
     // ログイン /login に遷移

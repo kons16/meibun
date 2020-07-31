@@ -7,6 +7,8 @@ type MyPageProps = {} & RouteComponentProps<{id: string}>;
 
 interface MyPageState {
     books: any
+    myID: number
+    urlID: number
 }
 
 // 自分の情報を表示するマイページ
@@ -14,17 +16,20 @@ class MyPage extends Component<MyPageProps, MyPageState> {
     constructor(props: MyPageProps) {
         super(props);
         this.state = {
-            books: []
+            books: [],
+            myID: 0,
+            urlID: 0
         };
     }
 
     componentDidMount() {
+        // ユーザーに基づくbookの取得
         axios.get('http://localhost:8000/users/books', {params: {id: this.props.match.params.id}})
             .then((response) => {
                 const books: any[] = response.data.Books;
                 if(books != null){
                     this.setState({
-                        books: books
+                        books: books,
                     })
                 }
                 console.log(this.state.books);
@@ -32,13 +37,31 @@ class MyPage extends Component<MyPageProps, MyPageState> {
             .catch(() => {
                 console.log("books get fail");
             });
+
+        // マイページに表示するログインしているユーザー情報の取得
+        axios.get('http://localhost:8000/', {withCredentials: true})
+            .then((response) => {
+                const userData = response.data.User;
+                if(userData != null){
+                    this.setState({
+                        myID: userData.ID,
+                        urlID: parseInt(this.props.match.params.id)
+                    })
+                }
+            })
+            .catch(() => {
+                console.log("index fail");
+            });
     }
 
     // Bookコンポーネントに各名文情報を渡いて表示
     render() {
         return (
             <div>
-                マイページです。
+                {this.state.urlID === this.state.myID &&
+                    <div>マイページです</div>
+                }
+
                 <Link to="/">ホームへ</Link>
                 {(() => {
                     const bookItems: any = [];
