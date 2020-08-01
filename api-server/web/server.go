@@ -90,7 +90,7 @@ func (s *server) Handler() *echo.Echo {
 }
 
 // GET / に対応
-func(s *server) indexHandler(c echo.Context) error {
+func (s *server) indexHandler(c echo.Context) error {
 	user := s.findUser(c)
 
 	data := map[string]interface{}{
@@ -101,14 +101,14 @@ func(s *server) indexHandler(c echo.Context) error {
 }
 
 // GET /get_session_name に対応
-func(s *server) getSessionNameHandler(c echo.Context) error {
+func (s *server) getSessionNameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"Name": sessionKey,
 	})
 }
 
 // GET /test に対応
-func(s *server) testHandler(c echo.Context) error {
+func (s *server) testHandler(c echo.Context) error {
 	msg := map[string]string{
 		"Name": "TEST",
 		"Value": "token-aaa",

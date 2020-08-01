@@ -11,5 +11,4 @@ type User struct {
 	PasswordHash 	string
 	UserSession 	UserSession
 	Books			[]Books
-	Quotations		[]Quotations
 }

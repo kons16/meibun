@@ -46,7 +46,7 @@ func New(dsn string) (Repository, error) {
 	}
 
 	db.AutoMigrate(&model.User{}, &model.UserSession{})
-	db.AutoMigrate(&model.Books{}, &model.Quotations{})
+	db.AutoMigrate(&model.Books{}, &model.UserHarts{})
 
 	return &repository{db: db}, nil
 }
