@@ -6,9 +6,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Name 			string
-	Email 			string
-	PasswordHash 	string
-	UserSession 	UserSession
+	Name			string
+	Email			string
+	PasswordHash	string
+	UserSession		UserSession
 	Books			[]Books
 }
