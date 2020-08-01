@@ -59,7 +59,10 @@ class MyPage extends Component<MyPageProps, MyPageState> {
         return (
             <div>
                 {this.state.urlID === this.state.myID &&
-                    <div>マイページです</div>
+                    <div>
+                        マイページです<br/>
+                        <Link to={{ pathname: '/post_book', state: {myID: this.state.myID}}}>名文を追加</Link>
+                    </div>
                 }
 
                 <Link to="/">ホームへ</Link>

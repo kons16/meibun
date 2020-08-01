@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
+import history from "../history";
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 
@@ -10,14 +11,21 @@ interface State {
     pages?: number
 }
 
+interface PostBookProps {
+    location: any
+}
+
 // 名文を新規登録する画面
-class PostBook extends Component<{}, State> {
-    state: State = {
-        sentence: "",
-        title: "",
-        author: "",
-        pages: 0,
-    };
+class PostBook extends Component<PostBookProps, State> {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            sentence: "",
+            title: "",
+            author: "",
+            pages: 0,
+        };
+    }
 
     componentDidMount() {
     }
@@ -34,8 +42,10 @@ class PostBook extends Component<{}, State> {
             {'sentence': this.state.sentence, 'title': this.state.title, 'author': this.state.author, 'pages': this.state.pages},
             {withCredentials: true})
             .then((response) => {
-                /// TODO
-                console.log("ok");
+                // マイページに遷移
+                history.push({
+                    pathname: `/users/${this.props.location.state.myID}`
+                });
             })
             .catch(() => {
                 console.log("post fail");
