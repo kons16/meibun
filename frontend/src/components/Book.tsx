@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from "axios";
+import Button from "@material-ui/core/Button";
 
 interface BookProps {
     id: number
@@ -7,6 +9,7 @@ interface BookProps {
     author: string
     pages: number
     harts: number
+    myPageFlag: boolean
 }
 
 interface BookState {
@@ -16,6 +19,7 @@ interface BookState {
     author: string
     pages: number
     harts: number
+    myPageFlag: boolean
 }
 
 // Book自体のコンポーネント
@@ -28,8 +32,22 @@ class Books extends Component<BookProps, BookState> {
             title: props.title,
             author: props.author,
             pages: props.pages,
-            harts: props.harts
+            harts: props.harts,
+            myPageFlag: props.myPageFlag
         };
+    }
+
+    // bookを削除する
+    handleDeleteBook = () => {
+        axios.post('http://localhost:8000/delete_book',
+            {'bookID': this.state.id, config: {withCredentials: true}})
+            .then((response) => {
+                window.location.reload();
+                console.log("delete");
+            })
+            .catch(() => {
+                console.log("delete fail");
+            });
     }
 
     componentDidMount() {
@@ -43,6 +61,14 @@ class Books extends Component<BookProps, BookState> {
                 <div id="book-author">{this.state.author}</div>
                 <div id="book-pages">p.{this.state.pages}</div>
                 <div id="book-harts">♡{this.state.harts}</div>
+                {this.state.myPageFlag &&
+                    <div>
+                        <Button variant="contained" color="primary"　style={{ marginTop: 10, width: 10 }}
+                                onClick={this.handleDeleteBook} >
+                            ☓
+                        </Button>
+                    </div>
+                }
             </div>
         );
     }

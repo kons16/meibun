@@ -9,6 +9,7 @@ interface MyPageState {
     books: any
     myID: number
     urlID: number
+    myPageFlag: boolean     // myPageFlagがtrueのときマイページ
 }
 
 // 自分の情報を表示するマイページ
@@ -18,26 +19,12 @@ class MyPage extends Component<MyPageProps, MyPageState> {
         this.state = {
             books: [],
             myID: 0,
-            urlID: 0
-        };
+            urlID: 0,
+            myPageFlag: false
+        }
     }
 
     componentDidMount() {
-        // ユーザーに基づくbookの取得
-        axios.get('http://localhost:8000/users/books', {params: {id: this.props.match.params.id}})
-            .then((response) => {
-                const books: any[] = response.data.Books;
-                if(books != null){
-                    this.setState({
-                        books: books,
-                    })
-                }
-                console.log(this.state.books);
-            })
-            .catch(() => {
-                console.log("books get fail");
-            });
-
         // マイページに表示するログインしているユーザー情報の取得
         axios.get('http://localhost:8000/', {withCredentials: true})
             .then((response) => {
@@ -51,6 +38,22 @@ class MyPage extends Component<MyPageProps, MyPageState> {
             })
             .catch(() => {
                 console.log("index fail");
+            });
+
+        // ユーザーに基づくbookの取得
+        axios.get('http://localhost:8000/users/books', {params: {id: this.props.match.params.id}})
+            .then((response) => {
+                const books: any[] = response.data.Books;
+                if(books != null){
+                    this.setState({
+                        books: books,
+                        myPageFlag: (books[0].UserID === this.state.myID) ? true : false
+                    })
+                }
+                // console.log(this.state.books);
+            })
+            .catch(() => {
+                console.log("books get fail");
             });
     }
 
@@ -68,7 +71,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                 <Link to="/">ホームへ</Link>
                 {(() => {
                     const bookItems: any = [];
-                    // console.log(this.state.books);
+                    // bookに削除マークを表示させるため、myPageFlagをbookに渡す
                     this.state.books.forEach((key: any, index: number) => {
                         bookItems.push(
                             <Book
@@ -79,6 +82,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                                 author={this.state.books[index].Author}
                                 pages={this.state.books[index].Pages}
                                 harts={this.state.books[index].Harts}
+                                myPageFlag={this.state.myPageFlag}
                             />
                         )
                     });
