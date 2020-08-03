@@ -11,3 +11,8 @@ func (app *meibunApp) CreateNewBook(sentence string, title string, author string
 func (app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 	return app.repo.GetAllBooksByUserID(userID)
 }
+
+// bookIDをもとに該当bookレコードを削除する
+func (app *meibunApp) DeleteBookByBookID(bookID uint, userID uint) error {
+	return app.repo.DeleteBookByBookID(bookID, userID)
+}

@@ -20,6 +20,14 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 	return nil
 }
 
+// 指定されたbooksレコードをcookieから得たuserIDをもとに削除
+func (r *repository) DeleteBookByBookID(bookID uint, userID uint) error {
+	if dbc := r.db.Where("ID = ? AND userID = ?", bookID, userID).Delete(&model.Books{}); dbc.Error != nil {
+		return dbc.Error
+	}
+	return nil
+}
+
 // userIDに紐づくbookレコードを全て取得
 func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 	var books []model.Books
