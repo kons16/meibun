@@ -76,7 +76,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                         bookItems.push(
                             <Book
                                 key={index}
-                                id={index}
+                                id={this.state.books[index].ID}
                                 sentence={this.state.books[index].Sentence}
                                 title={this.state.books[index].Title}
                                 author={this.state.books[index].Author}

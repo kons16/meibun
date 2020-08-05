@@ -22,7 +22,7 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 
 // 指定されたbooksレコードをcookieから得たuserIDをもとに削除
 func (r *repository) DeleteBookByBookID(bookID uint, userID uint) error {
-	if dbc := r.db.Where("ID = ? AND userID = ?", bookID, userID).Delete(&model.Books{}); dbc.Error != nil {
+	if dbc := r.db.Where("id = ? AND user_id = ?", bookID, userID).Delete(&model.Books{}); dbc.Error != nil {
 		return dbc.Error
 	}
 	return nil

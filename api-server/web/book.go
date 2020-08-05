@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"net/http"
 	"strconv"
@@ -30,15 +31,16 @@ func (s *server) postBookHandler(c echo.Context) error {
 // POST /delete_book に対応
 func (s *server) deleteBookHandler(c echo.Context) error {
 	params := new(struct {
-		bookID	int	`json:"bookID"`
+		BookID	int	`json:"bookID"`
 	})
 	c.Bind(params)
 
-	bookID, _ := strconv.ParseUint(string(params.bookID), 10, 32)
+	bookID, _ := strconv.ParseUint(strconv.Itoa(params.BookID), 10, 32)
 
 	cookie, err := c.Cookie(sessionKey)
 	if err == nil && cookie.Value != "" {
 		user, _ := s.app.FindUserByToken(cookie.Value)
+		fmt.Println(uint(bookID))
 		err = s.app.DeleteBookByBookID(uint(bookID), user.ID)
 		if err != nil {
 			return err

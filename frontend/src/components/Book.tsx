@@ -40,10 +40,10 @@ class Books extends Component<BookProps, BookState> {
     // bookを削除する
     handleDeleteBook = () => {
         axios.post('http://localhost:8000/delete_book',
-            {'bookID': this.state.id, config: {withCredentials: true}})
+            {'bookID': this.state.id},
+            {withCredentials: true})
             .then((response) => {
                 window.location.reload();
-                console.log("delete");
             })
             .catch(() => {
                 console.log("delete fail");
