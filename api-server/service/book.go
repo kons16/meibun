@@ -7,7 +7,7 @@ func (app *meibunApp) CreateNewBook(sentence string, title string, author string
 	return app.repo.CreateNewBook(sentence, title, author, pages, userId)
 }
 
-// userIDに紐づくbooksを返す
+// userIDに紐づくbooksを取得
 func (app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 	return app.repo.GetAllBooksByUserID(userID)
 }
@@ -15,4 +15,9 @@ func (app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 // bookIDをもとに該当bookレコードを削除する
 func (app *meibunApp) DeleteBookByBookID(bookID uint, userID uint) error {
 	return app.repo.DeleteBookByBookID(bookID, userID)
+}
+
+// userがハートしたbookを保存させ、保存後のbookのハート数を取得
+func (app *meibunApp) MakeHart(bookID uint, userID uint) (int, error) {
+	return app.repo.MakeHart(bookID, userID)
 }

@@ -87,6 +87,8 @@ func (s *server) Handler() *echo.Echo {
 	e.POST("/delete_book", s.deleteBookHandler)
 	e.GET("/users/books", s.getUserBooksHandler)
 
+	e.POST("/make_hart", s.makeHartHandler)
+
 	return e
 }
 

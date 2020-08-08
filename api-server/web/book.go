@@ -62,3 +62,28 @@ func (s *server) getUserBooksHandler(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, data)
 }
+
+// POST /make_hart に対応。タップ後のハート数を返す
+func (s * server) makeHartHandler(c echo.Context) error {
+	params := new(struct {
+		BookID	int	`json:"bookID"`
+	})
+	c.Bind(params)
+
+	bookID, _ := strconv.ParseUint(strconv.Itoa(params.BookID), 10, 32)
+
+	var hart int
+	cookie, err := c.Cookie(sessionKey)
+	if err == nil && cookie.Value != "" {
+		user, _ := s.app.FindUserByToken(cookie.Value)
+		hart, err = s.app.MakeHart(uint(bookID), user.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	data := map[string]int{
+		"hart": hart,
+	}
+	return c.JSON(http.StatusOK, data)
+}
