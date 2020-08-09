@@ -21,3 +21,8 @@ func (app *meibunApp) DeleteBookByBookID(bookID uint, userID uint) error {
 func (app *meibunApp) MakeHart(bookID uint, userID uint) (int, error) {
 	return app.repo.MakeHart(bookID, userID)
 }
+
+// userがハートしたbookを全件取得
+func (app *meibunApp) GetMyHart(userID uint) (*[]model.Books, error) {
+	return app.repo.GetMyHart(userID)
+}

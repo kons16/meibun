@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/kons16/meibun/api-server/model"
 	"github.com/labstack/echo"
 	"net/http"
 	"strconv"
@@ -64,7 +65,7 @@ func (s *server) getUserBooksHandler(c echo.Context) error {
 }
 
 // POST /make_hart に対応。タップ後のハート数を返す
-func (s * server) makeHartHandler(c echo.Context) error {
+func (s *server) makeHartHandler(c echo.Context) error {
 	params := new(struct {
 		BookID	int	`json:"bookID"`
 	})
@@ -84,6 +85,25 @@ func (s * server) makeHartHandler(c echo.Context) error {
 
 	data := map[string]int{
 		"hart": hart,
+	}
+	return c.JSON(http.StatusOK, data)
+}
+
+// POST /get_my_harts に対応
+func (s *server) getMyHartsHandler(c echo.Context) error {
+	var myHartBooks *[]model.Books
+
+	cookie, err := c.Cookie(sessionKey)
+	if err == nil && cookie.Value != "" {
+		user, _ := s.app.FindUserByToken(cookie.Value)
+		myHartBooks, err = s.app.GetMyHart(user.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	data := map[string]interface{}{
+		"myHartBooks": myHartBooks,
 	}
 	return c.JSON(http.StatusOK, data)
 }

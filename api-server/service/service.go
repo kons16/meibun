@@ -24,6 +24,7 @@ type MeibunApp interface {
 	GetAllBooksByUserID(userID uint) (*[]model.Books, error)
 
 	MakeHart(bookID uint, userID uint) (int, error)
+	GetMyHart(userID uint) (*[]model.Books, error)
 
 	Close() error
 }

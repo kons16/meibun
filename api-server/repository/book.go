@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kons16/meibun/api-server/model"
 	"time"
@@ -44,7 +45,7 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	// booksのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
 	var book model.Books
-	var userHart model.UserHarts
+	var userHart model.UsersHarts
 	r.db.Raw("SELECT * FROM users_harts WHERE user_id = ? AND book_id = ?", userID, bookID).Scan(&userHart)
 
 	if userHart.UserID != userID {
@@ -65,6 +66,15 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 }
 
 // userがハートしたbook全件を取得
-func (r *repository) GetMyHart(userID uint) error {
+func (r *repository) GetMyHart(userID uint) (*[]model.Books, error) {
+	var books []model.Books
+	var user model.User
 
+	r.db.First(&user, userID)
+	if dbc := r.db.Model(&books).Related(&user, "Users"); dbc.Error != nil {
+		return nil, dbc.Error
+	}
+
+	fmt.Println(books)
+	return &books, nil
 }

@@ -10,5 +10,5 @@ type User struct {
 	Email			string
 	PasswordHash	string
 	UserSession		UserSession
-	Books			[]Books
+	Books			[]*Books `gorm:"many2many:user_books;"`
 }
