@@ -42,17 +42,22 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 
 // booksにハートを押したときuser_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
+	// booksのhartを1増やす。ただしuser_hartに挿入するレコードが入っていないときのみ(初回のみ)
+	var book model.Books
+	var userHart model.UserHarts
+	r.db.Raw("SELECT * FROM user_harts WHERE user_id = ? AND book_id = ?", userID, bookID).Scan(&userHart)
+
+	if userHart.UserID != userID {
+		r.db.Raw("SELECT harts FROM books WHERE id = ?", bookID).Scan(&book)
+		if dbc := r.db.Exec("UPDATE books SET harts = ? WHERE id = ?", book.Harts+1, bookID); dbc.Error != nil {
+			return 0, dbc.Error
+		}
+	}
+
 	// user_hartsに重複がなければINSERTする
 	now := time.Now()
 	sql := "INSERT INTO user_harts(user_id, book_id, created_at, updated_at) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT user_id FROM user_harts WHERE user_id = ? AND book_id = ?)"
 	if dbc := r.db.Exec(sql, userID, bookID, now, now, userID, bookID); dbc.Error != nil {
-		return 0, dbc.Error
-	}
-
-	// booksのhartを1増やす
-	var book model.Books
-	r.db.Raw("SELECT harts FROM books WHERE id = ?", bookID).Scan(&book)
-	if dbc := r.db.Exec("UPDATE books SET harts = ? WHERE id = ?", book.Harts+1, bookID); dbc.Error != nil {
 		return 0, dbc.Error
 	}
 
