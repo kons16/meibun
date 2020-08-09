@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type UserHarts struct {
+type UsersHarts struct {
 	gorm.Model
 	UserID   	uint
 	BookID 		uint

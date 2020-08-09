@@ -23,6 +23,7 @@ type Repository interface {
 	GetAllBooksByUserID(userID uint) (*[]model.Books, error)
 
 	MakeHart(bookID uint, userID uint) (int, error)
+	GetMyHart(useID uint) error
 
 	Close() error
 }
@@ -50,7 +51,7 @@ func New(dsn string) (Repository, error) {
 	}
 
 	db.AutoMigrate(&model.User{}, &model.UserSession{})
-	db.AutoMigrate(&model.Books{}, &model.UserHarts{})
+	db.AutoMigrate(&model.Books{}, &model.UsersHarts{})
 
 	return &repository{db: db}, nil
 }
