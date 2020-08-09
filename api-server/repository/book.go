@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// booksテーブルに新しく名文を追加
+// booksテーブルに新しくレコードを追加。book_hartはhartを0でレコード追加。
 func (r *repository) CreateNewBook(sentence string, title string, author string, pages int, userId uint) error {
 	book := &model.Book{
 		Sentence: sentence,
@@ -17,6 +17,14 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 		UserID: userId,
 	}
 	if dbc := r.db.Create(&book); dbc.Error != nil {
+		return dbc.Error
+	}
+
+	bookHart := &model.BookHart{
+		BookID: book.ID,
+		Hart: 0,
+	}
+	if dbc := r.db.Create(&bookHart); dbc.Error != nil {
 		return dbc.Error
 	}
 	return nil
@@ -49,7 +57,7 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 
 	// bookIDから該当するbook_hart_idを取得し、users_hartsからbook_hartに紐づくユーザーを取得する
 	r.db.First(&book, bookID)
-	if dbc := r.db.Model(&bookHart).Related(&book); dbc.Error != nil {
+	if dbc := r.db.Model(&book).Related(&bookHart); dbc.Error != nil {
 		fmt.Println(dbc.Error)
 		return 0, dbc.Error
 	}
@@ -57,7 +65,7 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 
 	// book_hartのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
 	if userHart.UserID != userID {
-		if dbc := r.db.Exec("UPDATE book_hart SET hart = ? WHERE id = ?", bookHart.Hart+1, bookID); dbc.Error != nil {
+		if dbc := r.db.Exec("UPDATE book_harts SET hart = ? WHERE book_id = ?", bookHart.Hart+1, bookID); dbc.Error != nil {
 			return 0, dbc.Error
 		}
 	}
