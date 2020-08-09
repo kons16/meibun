@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type UsersHarts struct {
+type BookHarts struct {
 	gorm.Model
-	UserID   	uint
-	BookHartsID uint
+	BookID   		uint
+	Harts			int
 }

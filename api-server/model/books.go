@@ -10,7 +10,6 @@ type Book struct {
 	Title 			string
 	Author 			string
 	Pages			int
-	Harts			int
 	UserID   		uint
 	Users			[]*User `gorm:"many2many:user_books;"`
 }
