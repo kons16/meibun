@@ -3,6 +3,7 @@ package repository
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kons16/meibun/api-server/model"
+	"time"
 )
 
 // booksテーブルに新しく名文を追加
@@ -41,20 +42,10 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 
 // booksにハートを押したときuser_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
-	userHart := &model.UserHarts{
-		UserID: userID,
-		BookID: bookID,
-	}
-	if dbc := r.db.Create(&userHart); dbc.Error != nil {
-		return 0, dbc.Error
-	}
+	// user_hartsに重複がなければINSERTする
+	now := time.Now()
+	sql := "INSERT INTO user_harts(user_id, book_id, created_at, updated_at) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT user_id FROM user_harts WHERE user_id = ? AND book_id = ?)"
+	r.db.Exec(sql, userID, bookID, now, now, userID, bookID)
 
-	// 現状のhart数を取得し、+1でUPDATEする
-	var nowHart int
-	r.db.Raw("SELECT harts FROM books WHERE id = ?", bookID).Scan(&nowHart)
-	if dbc := r.db.Exec("UPDATE books SET harts = ? WHERE id = ?", nowHart+1, bookID); dbc.Error != nil {
-		return 0, dbc.Error
-	}
-	
-	return nowHart+1, nil
+	return 0, nil
 }
