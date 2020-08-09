@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type BookHarts struct {
+type BookHart struct {
 	gorm.Model
 	BookID   		uint
-	Harts			int
+	Hart			int
 }
