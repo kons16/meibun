@@ -8,7 +8,7 @@ func (app *meibunApp) CreateNewBook(sentence string, title string, author string
 }
 
 // userIDに紐づくbooksを取得
-func (app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
+func (app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.Book, error) {
 	return app.repo.GetAllBooksByUserID(userID)
 }
 
@@ -23,6 +23,6 @@ func (app *meibunApp) MakeHart(bookID uint, userID uint) (int, error) {
 }
 
 // userがハートしたbookを全件取得
-func (app *meibunApp) GetMyHart(userID uint) (*[]model.Books, error) {
+func (app *meibunApp) GetMyHart(userID uint) (*[]model.Book, error) {
 	return app.repo.GetMyHart(userID)
 }

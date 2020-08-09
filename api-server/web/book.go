@@ -89,9 +89,9 @@ func (s *server) makeHartHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
-// POST /get_my_harts に対応
+// GET /get_my_harts に対応
 func (s *server) getMyHartsHandler(c echo.Context) error {
-	var myHartBooks *[]model.Books
+	var myHartBooks *[]model.Book
 
 	cookie, err := c.Cookie(sessionKey)
 	if err == nil && cookie.Value != "" {

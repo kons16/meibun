@@ -88,7 +88,7 @@ func (s *server) Handler() *echo.Echo {
 	e.GET("/users/books", s.getUserBooksHandler)
 
 	e.POST("/make_hart", s.makeHartHandler)
-	e.POST("/get_my_hart", s.getMyHartsHandler)
+	e.GET("/get_my_harts", s.getMyHartsHandler)
 
 	return e
 }

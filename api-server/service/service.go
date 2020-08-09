@@ -21,10 +21,10 @@ type MeibunApp interface {
 
 	CreateNewBook(sentence string, title string, author string, pages int, userId uint) error
 	DeleteBookByBookID(bookID uint, userID uint) error
-	GetAllBooksByUserID(userID uint) (*[]model.Books, error)
+	GetAllBooksByUserID(userID uint) (*[]model.Book, error)
 
 	MakeHart(bookID uint, userID uint) (int, error)
-	GetMyHart(userID uint) (*[]model.Books, error)
+	GetMyHart(userID uint) (*[]model.Book, error)
 
 	Close() error
 }

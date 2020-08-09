@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Books struct {
+type Book struct {
 	gorm.Model
 	Sentence 		string
 	Title 			string

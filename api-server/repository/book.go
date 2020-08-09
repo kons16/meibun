@@ -9,7 +9,7 @@ import (
 
 // booksテーブルに新しく名文を追加
 func (r *repository) CreateNewBook(sentence string, title string, author string, pages int, userId uint) error {
-	book := &model.Books{
+	book := &model.Book{
 		Sentence: sentence,
 		Title: title,
 		Author: author,
@@ -24,15 +24,15 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 
 // 指定されたbooksレコードをcookieから得たuserIDをもとに削除
 func (r *repository) DeleteBookByBookID(bookID uint, userID uint) error {
-	if dbc := r.db.Where("id = ? AND user_id = ?", bookID, userID).Delete(&model.Books{}); dbc.Error != nil {
+	if dbc := r.db.Where("id = ? AND user_id = ?", bookID, userID).Delete(&model.Book{}); dbc.Error != nil {
 		return dbc.Error
 	}
 	return nil
 }
 
 // userIDに紐づくbookレコードを全て取得
-func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
-	var books []model.Books
+func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Book, error) {
+	var books []model.Book
 	var user model.User
 	r.db.First(&user, userID)
 	if dbc := r.db.Model(&user).Related(&books); dbc.Error != nil {
@@ -44,7 +44,7 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Books, error) {
 // booksにハートを押したときusers_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	// booksのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
-	var book model.Books
+	var book model.Book
 	var userHart model.UsersHarts
 	r.db.Raw("SELECT * FROM users_harts WHERE user_id = ? AND book_id = ?", userID, bookID).Scan(&userHart)
 
@@ -66,12 +66,13 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 }
 
 // userがハートしたbook全件を取得
-func (r *repository) GetMyHart(userID uint) (*[]model.Books, error) {
-	var books []model.Books
+func (r *repository) GetMyHart(userID uint) (*[]model.Book, error) {
+	var books []model.Book
 	var user model.User
 
 	r.db.First(&user, userID)
 	if dbc := r.db.Model(&books).Related(&user, "Users"); dbc.Error != nil {
+		fmt.Println(dbc.Error)
 		return nil, dbc.Error
 	}
 

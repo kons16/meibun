@@ -20,10 +20,10 @@ type Repository interface {
 
 	CreateNewBook(sentence string, title string, author string, pages int, userId uint) error
 	DeleteBookByBookID(bookID uint, userID uint) error
-	GetAllBooksByUserID(userID uint) (*[]model.Books, error)
+	GetAllBooksByUserID(userID uint) (*[]model.Book, error)
 
 	MakeHart(bookID uint, userID uint) (int, error)
-	GetMyHart(userID uint) (*[]model.Books, error)
+	GetMyHart(userID uint) (*[]model.Book, error)
 
 	Close() error
 }
@@ -51,7 +51,7 @@ func New(dsn string) (Repository, error) {
 	}
 
 	db.AutoMigrate(&model.User{}, &model.UserSession{})
-	db.AutoMigrate(&model.Books{}, &model.UsersHarts{})
+	db.AutoMigrate(&model.Book{}, &model.UsersHarts{})
 
 	return &repository{db: db}, nil
 }
