@@ -47,11 +47,11 @@ class Menu extends Component<{}, State> {
             .then((response) => {
                 const name = response.data.Name;
                 document.cookie = `${name}=; max-age=0`;
-                window.location.reload();
             })
             .catch(() => {
                 console.log("signout fail");
             });
+        window.location.reload();
     }
 
     // マイページ /users/:id に遷移。ログインしている自分のIDを渡す
