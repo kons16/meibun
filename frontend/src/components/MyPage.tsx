@@ -69,6 +69,8 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                 }
 
                 <Link to="/">ホームへ</Link>
+                <Link to="/my_hart">マイハート一覧</Link>
+
                 {(() => {
                     const bookItems: any = [];
                     // bookに削除マークを表示させるため、myPageFlagをbookに渡す
