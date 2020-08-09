@@ -50,6 +50,19 @@ class Books extends Component<BookProps, BookState> {
             });
     }
 
+    // bookにハートする
+    handleMakeHart = () => {
+        axios.post('http://localhost:8000/make_hart',
+            {'bookID': this.state.id},
+            {withCredentials: true})
+            .then((response) => {
+                window.location.reload();
+            })
+            .catch(() => {
+                console.log("delete fail");
+            });
+    }
+
     componentDidMount() {
     }
 
@@ -60,7 +73,17 @@ class Books extends Component<BookProps, BookState> {
                 <div id="book-title">『{this.state.title}』</div>
                 <div id="book-author">{this.state.author}</div>
                 <div id="book-pages">p.{this.state.pages}</div>
-                <div id="book-harts">♡{this.state.harts}</div>
+                <div id="book-harts">
+                    {this.state.myPageFlag
+                        ? (<div>♡</div>)
+                        : (<div>
+                            <button onClick={this.handleMakeHart}>
+                                ♡
+                            </button>
+                        </div>)
+                    }
+                    {this.state.harts}
+                </div>
                 {this.state.myPageFlag &&
                     <div>
                         <Button variant="contained" color="primary"　style={{ marginTop: 10, width: 10 }}
