@@ -43,26 +43,33 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Book, error) {
 
 // booksにハートを押したときusers_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
-	// booksのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
 	var book model.Book
 	var userHart model.UsersHarts
-	r.db.Raw("SELECT * FROM users_harts WHERE user_id = ? AND book_id = ?", userID, bookID).Scan(&userHart)
+	var bookHart model.BookHart
 
+	// bookIDから該当するbook_hart_idを取得し、users_hartsからbook_hartに紐づくユーザーを取得する
+	r.db.First(&book, bookID)
+	if dbc := r.db.Model(&bookHart).Related(&book); dbc.Error != nil {
+		fmt.Println(dbc.Error)
+		return 0, dbc.Error
+	}
+	r.db.Raw("SELECT * FROM users_harts WHERE user_id = ? AND book_hart_id = ?", userID, bookHart.ID).Scan(&userHart)
+
+	// book_hartのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
 	if userHart.UserID != userID {
-		r.db.Raw("SELECT harts FROM books WHERE id = ?", bookID).Scan(&book)
-		if dbc := r.db.Exec("UPDATE books SET harts = ? WHERE id = ?", book.Harts+1, bookID); dbc.Error != nil {
+		if dbc := r.db.Exec("UPDATE book_hart SET hart = ? WHERE id = ?", bookHart.Hart+1, bookID); dbc.Error != nil {
 			return 0, dbc.Error
 		}
 	}
 
 	// users_hartsに重複がなければINSERTする
 	now := time.Now()
-	sql := "INSERT INTO users_harts(user_id, book_id, created_at, updated_at) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT user_id FROM users_harts WHERE user_id = ? AND book_id = ?)"
-	if dbc := r.db.Exec(sql, userID, bookID, now, now, userID, bookID); dbc.Error != nil {
+	sql := "INSERT INTO users_harts(user_id, book_hart_id, created_at, updated_at) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT user_id FROM users_harts WHERE user_id = ? AND book_hart_id = ?)"
+	if dbc := r.db.Exec(sql, userID, bookHart.ID, now, now, userID, bookHart.ID); dbc.Error != nil {
 		return 0, dbc.Error
 	}
 
-	return book.Harts+1, nil
+	return bookHart.Hart+1, nil
 }
 
 // userがハートしたbook全件を取得
