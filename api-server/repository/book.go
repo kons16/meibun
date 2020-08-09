@@ -53,6 +53,7 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error
 
 	for i, book := range books {
 		frontBook[i].ID = books[i].ID
+		frontBook[i].UserID = books[i].UserID
 		frontBook[i].CreatedAt = books[i].CreatedAt
 		frontBook[i].UpdatedAt = books[i].UpdatedAt
 		frontBook[i].Sentence = books[i].Sentence
