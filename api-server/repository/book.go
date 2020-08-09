@@ -42,7 +42,6 @@ func (r *repository) DeleteBookByBookID(bookID uint, userID uint) error {
 func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error) {
 	var books []model.Book
 	var user model.User
-	var bookHart model.BookHart
 
 	r.db.First(&user, userID)
 	if dbc := r.db.Model(&user).Related(&books); dbc.Error != nil {
@@ -51,7 +50,7 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error
 
 	frontBook := make([]model.FrontBook, len(books))
 
-	for i, book := range books {
+	for i, _ := range books {
 		frontBook[i].ID = books[i].ID
 		frontBook[i].UserID = books[i].UserID
 		frontBook[i].CreatedAt = books[i].CreatedAt
@@ -60,7 +59,8 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error
 		frontBook[i].Title = books[i].Title
 		frontBook[i].Author = books[i].Author
 		frontBook[i].Pages = books[i].Pages
-		r.db.Model(&book).Related(&bookHart)
+		var bookHart model.BookHart
+		r.db.Model(books[i]).Related(&bookHart)
 		frontBook[i].Harts = bookHart.Hart
 	}
 
