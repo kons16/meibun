@@ -39,15 +39,34 @@ func (r *repository) DeleteBookByBookID(bookID uint, userID uint) error {
 }
 
 // userIDに紐づくbookレコードを全て取得
-func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.Book, error) {
+func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error) {
 	var books []model.Book
 	var user model.User
+	var bookHart model.BookHart
+
 	r.db.First(&user, userID)
 	if dbc := r.db.Model(&user).Related(&books); dbc.Error != nil {
 		return nil, dbc.Error
 	}
-	return &books, nil
+
+	frontBook := make([]model.FrontBook, len(books))
+
+	for i, book := range books {
+		frontBook[i].ID = books[i].ID
+		frontBook[i].CreatedAt = books[i].CreatedAt
+		frontBook[i].UpdatedAt = books[i].UpdatedAt
+		frontBook[i].Sentence = books[i].Sentence
+		frontBook[i].Title = books[i].Title
+		frontBook[i].Author = books[i].Author
+		frontBook[i].Pages = books[i].Pages
+		r.db.Model(&book).Related(&bookHart)
+		frontBook[i].Harts = bookHart.Hart
+	}
+
+	return &frontBook, nil
 }
+
+// bookIDに紐づくhartを全て取得
 
 // booksにハートを押したときusers_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {

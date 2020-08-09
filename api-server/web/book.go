@@ -50,16 +50,16 @@ func (s *server) deleteBookHandler(c echo.Context) error {
 	return nil
 }
 
-// GET /users/books に対応。 userIDに紐づくbooksレコードを全件取得
+// GET /users/books に対応。 userIDに紐づくbooksレコードを全件取得。またそれに紐づくhart数も取得
 func (s *server) getUserBooksHandler(c echo.Context) error {
 	id, _ := strconv.ParseUint(c.QueryParam("id"), 10, 32)
-	books, err := s.app.GetAllBooksByUserID(uint(id))
+	frontBooks, err := s.app.GetAllBooksByUserID(uint(id))
 	if err != nil {
 		return echo.ErrNotFound
 	}
 
 	data := map[string]interface{}{
-		"Books":    books,
+		"Books":    frontBooks,
 	}
 	return c.JSON(http.StatusOK, data)
 }
