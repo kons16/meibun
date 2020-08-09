@@ -45,7 +45,16 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	// user_hartsに重複がなければINSERTする
 	now := time.Now()
 	sql := "INSERT INTO user_harts(user_id, book_id, created_at, updated_at) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT user_id FROM user_harts WHERE user_id = ? AND book_id = ?)"
-	r.db.Exec(sql, userID, bookID, now, now, userID, bookID)
+	if dbc := r.db.Exec(sql, userID, bookID, now, now, userID, bookID); dbc.Error != nil {
+		return 0, dbc.Error
+	}
 
-	return 0, nil
+	// booksのhartを1増やす
+	var book model.Books
+	r.db.Raw("SELECT harts FROM books WHERE id = ?", bookID).Scan(&book)
+	if dbc := r.db.Exec("UPDATE books SET harts = ? WHERE id = ?", book.Harts+1, bookID); dbc.Error != nil {
+		return 0, dbc.Error
+	}
+
+	return book.Harts+1, nil
 }
