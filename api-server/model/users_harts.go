@@ -6,6 +6,6 @@ import (
 
 type UsersHarts struct {
 	gorm.Model
-	UserID   	uint
-	BookHartID uint
+	UserID		uint
+	BookHartID 	uint
 }

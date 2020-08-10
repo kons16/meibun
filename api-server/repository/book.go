@@ -4,7 +4,6 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kons16/meibun/api-server/model"
-	"time"
 )
 
 // booksテーブルに新しくレコードを追加。book_hartはhartを0でレコード追加。
@@ -67,8 +66,6 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error
 	return &frontBook, nil
 }
 
-// bookIDに紐づくhartを全て取得
-
 // booksにハートを押したときusers_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	var book model.Book
@@ -81,7 +78,7 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 		fmt.Println(dbc.Error)
 		return 0, dbc.Error
 	}
-	r.db.Raw("SELECT * FROM users_harts WHERE user_id = ? AND book_hart_id = ?", userID, bookHart.ID).Scan(&userHart)
+	r.db.Raw("SELECT * FROM users_book_harts WHERE user_id = ? AND book_hart_id = ?", userID, bookHart.ID).Scan(&userHart)
 
 	// book_hartのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
 	if userHart.UserID != userID {
@@ -90,10 +87,9 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 		}
 	}
 
-	// users_hartsに重複がなければINSERTする
-	now := time.Now()
-	sql := "INSERT INTO users_harts(user_id, book_hart_id, created_at, updated_at) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT user_id FROM users_harts WHERE user_id = ? AND book_hart_id = ?)"
-	if dbc := r.db.Exec(sql, userID, bookHart.ID, now, now, userID, bookHart.ID); dbc.Error != nil {
+	// users_book_hartsに重複がなければINSERTする
+	sql := "INSERT INTO users_book_harts(user_id, book_hart_id) SELECT ?, ? WHERE NOT EXISTS (SELECT user_id FROM users_book_harts WHERE user_id = ? AND book_hart_id = ?)"
+	if dbc := r.db.Exec(sql, userID, bookHart.ID, userID, bookHart.ID); dbc.Error != nil {
 		return 0, dbc.Error
 	}
 
@@ -102,15 +98,5 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 
 // userがハートしたbook全件を取得
 func (r *repository) GetMyHart(userID uint) (*[]model.Book, error) {
-	var books []model.Book
-	var user model.User
-
-	r.db.First(&user, userID)
-	if dbc := r.db.Model(&books).Related(&user, "Users"); dbc.Error != nil {
-		fmt.Println(dbc.Error)
-		return nil, dbc.Error
-	}
-
-	fmt.Println(books)
-	return &books, nil
+	return nil, nil
 }

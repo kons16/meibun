@@ -10,5 +10,6 @@ type User struct {
 	Email			string
 	PasswordHash	string
 	UserSession		UserSession
-	Books			[]*Book `gorm:"many2many:user_books;"`
+	Books			[]*Book
+	UsersHarts		[]BookHart `gorm:"many2many:users_book_harts"`
 }
