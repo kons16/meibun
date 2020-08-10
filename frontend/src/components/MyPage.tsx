@@ -68,7 +68,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                     </div>
                 }
 
-                <Link to="/">ホームへ</Link>
+                <Link to="/">ホームへ</Link> <br/>
                 <Link to="/my_hart">マイハート一覧</Link>
 
                 {(() => {

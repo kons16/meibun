@@ -91,7 +91,7 @@ func (s *server) makeHartHandler(c echo.Context) error {
 
 // GET /get_my_harts に対応
 func (s *server) getMyHartsHandler(c echo.Context) error {
-	var myHartBooks *[]model.Book
+	var myHartBooks *[]model.FrontBook
 
 	cookie, err := c.Cookie(sessionKey)
 	if err == nil && cookie.Value != "" {

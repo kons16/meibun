@@ -23,6 +23,6 @@ func (app *meibunApp) MakeHart(bookID uint, userID uint) (int, error) {
 }
 
 // userがハートしたbookを全件取得
-func (app *meibunApp) GetMyHart(userID uint) (*[]model.Book, error) {
+func (app *meibunApp) GetMyHart(userID uint) (*[]model.FrontBook, error) {
 	return app.repo.GetMyHart(userID)
 }

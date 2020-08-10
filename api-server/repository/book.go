@@ -97,6 +97,21 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 }
 
 // userがハートしたbook全件を取得
-func (r *repository) GetMyHart(userID uint) (*[]model.Book, error) {
-	return nil, nil
+func (r *repository) GetMyHart(userID uint) (*[]model.FrontBook, error) {
+	var user model.User
+
+	r.db.First(&user, userID).Related(&user.UsersHarts, "UsersHarts")
+	frontBooks := make([]model.FrontBook, len(user.UsersHarts))
+	for i, v := range user.UsersHarts {
+		var book model.Book
+		r.db.First(&book, v.BookID)
+		frontBooks[i].ID = book.ID
+		frontBooks[i].Sentence = book.Sentence
+		frontBooks[i].Title = book.Title
+		frontBooks[i].Author = book.Author
+		frontBooks[i].Pages = book.Pages
+		frontBooks[i].Harts = v.Hart
+	}
+
+	return &frontBooks, nil
 }
