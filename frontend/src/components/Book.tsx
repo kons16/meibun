@@ -9,7 +9,8 @@ interface BookProps {
     author: string
     pages: number
     harts: number
-    myPageFlag: boolean
+    myPageFlag: boolean  // trueのときはbookが自分の投稿である(バツマークを表示させる)
+    hartFlag: boolean   // trueのときは自分がハートをした投稿である(ハートを再度クリックでハートから削除)
 }
 
 interface BookState {
@@ -20,6 +21,7 @@ interface BookState {
     pages: number
     harts: number
     myPageFlag: boolean
+    hartFlag: boolean
 }
 
 // Book自体のコンポーネント
@@ -33,7 +35,8 @@ class Books extends Component<BookProps, BookState> {
             author: props.author,
             pages: props.pages,
             harts: props.harts,
-            myPageFlag: props.myPageFlag
+            myPageFlag: props.myPageFlag,
+            hartFlag: props.hartFlag
         };
     }
 
@@ -52,18 +55,27 @@ class Books extends Component<BookProps, BookState> {
 
     // bookにハートする
     handleMakeHart = () => {
-        axios.post('http://localhost:8000/make_hart',
-            {'bookID': this.state.id},
-            {withCredentials: true})
-            .then((response) => {
-                window.location.reload();
-            })
-            .catch(() => {
-                console.log("delete fail");
-            });
-    }
-
-    componentDidMount() {
+        if(this.state.hartFlag) {
+            axios.post('http://localhost:8000/remove_hart',
+                {'bookID': this.state.id},
+                {withCredentials: true})
+                .then((response) => {
+                    window.location.reload();
+                })
+                .catch(() => {
+                    console.log("delete fail");
+                });
+        } else {
+            axios.post('http://localhost:8000/make_hart',
+                {'bookID': this.state.id},
+                {withCredentials: true})
+                .then((response) => {
+                    window.location.reload();
+                })
+                .catch(() => {
+                    console.log("delete fail");
+                });
+        }
     }
 
     render() {
@@ -78,7 +90,7 @@ class Books extends Component<BookProps, BookState> {
                         ? (<div>♡</div>)
                         : (<div>
                             <button onClick={this.handleMakeHart}>
-                                ♡
+                                {this.state.hartFlag ? <div>☓</div> : <div>♡</div>}
                             </button>
                         </div>)
                     }

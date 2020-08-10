@@ -89,6 +89,35 @@ func (s *server) makeHartHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
+// POST /remove_hart に対応。ハート取り消し後のハート全件を返す
+func (s *server) removeHartHandler(c echo.Context) error {
+	params := new(struct {
+		BookID	int	`json:"bookID"`
+	})
+	c.Bind(params)
+
+	bookID, _ := strconv.ParseUint(strconv.Itoa(params.BookID), 10, 32)
+
+	var myHartBooks *[]model.FrontBook
+	var userID uint
+
+	cookie, err := c.Cookie(sessionKey)
+	if err == nil && cookie.Value != "" {
+		user, _ := s.app.FindUserByToken(cookie.Value)
+		myHartBooks, err = s.app.RemoveMyHart(uint(bookID), user.ID)
+		userID = user.ID
+		if err != nil {
+			return err
+		}
+	}
+
+	data := map[string]interface{}{
+		"myHartBooks": myHartBooks,
+		"ID": userID,
+	}
+	return c.JSON(http.StatusOK, data)
+}
+
 // GET /get_my_harts に対応。ハートしたbookとログインしているユーザーIDを返す
 func (s *server) getMyHartsHandler(c echo.Context) error {
 	var myHartBooks *[]model.FrontBook

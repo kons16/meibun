@@ -9,7 +9,7 @@ interface MyPageState {
     books: any
     myID: number
     urlID: number
-    myPageFlag: boolean     // myPageFlagがtrueのときマイページ
+    myPageFlag: boolean
 }
 
 // 自分の情報を表示するマイページ
@@ -50,7 +50,6 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                         myPageFlag: (books[0].UserID === this.state.myID) ? true : false
                     })
                 }
-                // console.log(this.state.books);
             })
             .catch(() => {
                 console.log("books get fail");
@@ -85,6 +84,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                                 pages={this.state.books[index].Pages}
                                 harts={this.state.books[index].Harts}
                                 myPageFlag={this.state.myPageFlag}
+                                hartFlag={false}
                             />
                         )
                     });

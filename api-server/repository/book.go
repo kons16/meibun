@@ -69,7 +69,7 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error
 // booksにハートを押したときusers_hartsテーブルにレコードを追加し、books該当レコードのハート数を1上げる
 func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	var book model.Book
-	var userHart model.UsersHarts
+	var userBookHart model.UsersHarts
 	var bookHart model.BookHart
 
 	// bookIDから該当するbook_hart_idを取得し、users_hartsからbook_hartに紐づくユーザーを取得する
@@ -78,10 +78,10 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 		fmt.Println(dbc.Error)
 		return 0, dbc.Error
 	}
-	r.db.Raw("SELECT * FROM users_book_harts WHERE user_id = ? AND book_hart_id = ?", userID, bookHart.ID).Scan(&userHart)
+	r.db.Raw("SELECT * FROM users_book_harts WHERE user_id = ? AND book_hart_id = ?", userID, bookHart.ID).Scan(&userBookHart)
 
 	// book_hartのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
-	if userHart.UserID != userID {
+	if userBookHart.UserID != userID {
 		if dbc := r.db.Exec("UPDATE book_harts SET hart = ? WHERE book_id = ?", bookHart.Hart+1, bookID); dbc.Error != nil {
 			return 0, dbc.Error
 		}
@@ -94,6 +94,31 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	}
 
 	return bookHart.Hart+1, nil
+}
+
+// users_book_hartsから街頭レコードを削除し、book_hartの該当hartを-1する
+func (r *repository) RemoveMyHart(bookID uint, userID uint) (*[]model.FrontBook, error) {
+	var book model.Book
+	var bookHart model.BookHart
+
+	// bookIDから該当するbook_hart_idを取得し、users_book_hartsからuser_idとbook_hart_idレコードを削除する
+	r.db.First(&book, bookID)
+	if dbc := r.db.Model(&book).Related(&bookHart); dbc.Error != nil {
+		fmt.Println(dbc.Error)
+		return nil, dbc.Error
+	}
+	if dbc := r.db.Exec("DELETE FROM users_book_harts WHERE user_id = ? AND book_hart_id = ?", userID, bookHart.ID); dbc.Error != nil {
+		fmt.Println(dbc.Error)
+		return nil, dbc.Error
+	}
+
+	// book_hartの該当レコードのhartを-1する
+	if dbc := r.db.Exec("UPDATE book_harts SET hart = ? WHERE book_id = ?", bookHart.Hart-1, bookID); dbc.Error != nil {
+		return nil, dbc.Error
+	}
+
+	// remove後のユーザーに紐づくハートbookを全件返す
+	return r.GetMyHart(userID)
 }
 
 // userがハートしたbook全件を取得

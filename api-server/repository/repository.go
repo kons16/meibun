@@ -24,6 +24,7 @@ type Repository interface {
 
 	MakeHart(bookID uint, userID uint) (int, error)
 	GetMyHart(userID uint) (*[]model.FrontBook, error)
+	RemoveMyHart(bookID uint, userID uint) (*[]model.FrontBook, error)
 
 	Close() error
 }

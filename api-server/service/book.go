@@ -22,6 +22,11 @@ func (app *meibunApp) MakeHart(bookID uint, userID uint) (int, error) {
 	return app.repo.MakeHart(bookID, userID)
 }
 
+// ハートしたbookの取り消し。取り消し後のハートしたbook一覧を取得
+func (app *meibunApp) RemoveMyHart(bookID uint, userID uint) (*[]model.FrontBook, error) {
+	return app.repo.RemoveMyHart(bookID, userID)
+}
+
 // userがハートしたbookを全件取得
 func (app *meibunApp) GetMyHart(userID uint) (*[]model.FrontBook, error) {
 	return app.repo.GetMyHart(userID)
