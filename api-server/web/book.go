@@ -89,14 +89,16 @@ func (s *server) makeHartHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
-// GET /get_my_harts に対応
+// GET /get_my_harts に対応。ハートしたbookとログインしているユーザーIDを返す
 func (s *server) getMyHartsHandler(c echo.Context) error {
 	var myHartBooks *[]model.FrontBook
+	var userID uint
 
 	cookie, err := c.Cookie(sessionKey)
 	if err == nil && cookie.Value != "" {
 		user, _ := s.app.FindUserByToken(cookie.Value)
 		myHartBooks, err = s.app.GetMyHart(user.ID)
+		userID = user.ID
 		if err != nil {
 			return err
 		}
@@ -104,6 +106,7 @@ func (s *server) getMyHartsHandler(c echo.Context) error {
 
 	data := map[string]interface{}{
 		"myHartBooks": myHartBooks,
+		"ID": userID,
 	}
 	return c.JSON(http.StatusOK, data)
 }
