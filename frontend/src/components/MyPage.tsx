@@ -85,6 +85,7 @@ class MyPage extends Component<MyPageProps, MyPageState> {
                                 harts={this.state.books[index].Harts}
                                 myPageFlag={this.state.myPageFlag}
                                 hartFlag={false}
+                                bookUserID={this.state.books[index].UserID}
                             />
                         )
                     });

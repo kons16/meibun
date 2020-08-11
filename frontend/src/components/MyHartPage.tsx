@@ -70,6 +70,7 @@ class MyHartPage extends Component<{}, MyHartPageState> {
                                 harts={this.state.books[index].Harts}
                                 myPageFlag={false}
                                 hartFlag={true}
+                                bookUserID={this.state.books[index].UserID}
                             />
                         )
                     });
