@@ -29,6 +29,39 @@ func (s *server) postBookHandler(c echo.Context) error {
 	return nil
 }
 
+// POST /update_book に対応
+func (s *server) updateBookHandler(c echo.Context) error {
+	params := new(struct {
+		Sentence	string	`json:"sentence"`
+		Title		string	`json:"title"`
+		Author		string	`json:"author"`
+		Pages		int		`json:"pages"`
+		UserID		int		`json:"bookUserID"`
+	})
+	c.Bind(params)
+
+	UserID, _ := strconv.ParseUint(strconv.Itoa(params.UserID), 10, 32)
+
+	book := new(model.Book)
+	book.Sentence = params.Sentence
+	book.Title = params.Title
+	book.Author = params.Author
+	book.Pages = params.Pages
+	book.UserID = uint(UserID)
+
+	cookie, err := c.Cookie(sessionKey)
+	if err == nil && cookie.Value != "" {
+		user, _ := s.app.FindUserByToken(cookie.Value)
+		if user.ID == uint(UserID) {
+			err = s.app.UpdateBook(book)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // POST /delete_book に対応
 func (s *server) deleteBookHandler(c echo.Context) error {
 	params := new(struct {

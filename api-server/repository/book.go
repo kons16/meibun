@@ -16,6 +16,7 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 		UserID: userId,
 	}
 	if dbc := r.db.Create(&book); dbc.Error != nil {
+		fmt.Println(dbc.Error)
 		return dbc.Error
 	}
 
@@ -24,6 +25,7 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 		Hart: 0,
 	}
 	if dbc := r.db.Create(&bookHart); dbc.Error != nil {
+		fmt.Println(dbc.Error)
 		return dbc.Error
 	}
 	return nil
@@ -32,6 +34,7 @@ func (r *repository) CreateNewBook(sentence string, title string, author string,
 // 指定されたbooksレコードをcookieから得たuserIDをもとに削除
 func (r *repository) DeleteBookByBookID(bookID uint, userID uint) error {
 	if dbc := r.db.Where("id = ? AND user_id = ?", bookID, userID).Delete(&model.Book{}); dbc.Error != nil {
+		fmt.Println(dbc.Error)
 		return dbc.Error
 	}
 	return nil
@@ -44,6 +47,7 @@ func (r *repository) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error
 
 	r.db.First(&user, userID)
 	if dbc := r.db.Model(&user).Related(&books); dbc.Error != nil {
+		fmt.Println(dbc.Error)
 		return nil, dbc.Error
 	}
 
@@ -83,6 +87,7 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	// book_hartのhartを1増やす。ただしusers_hartに挿入するレコードが入っていないときのみ(初回のみ)
 	if userBookHart.UserID != userID {
 		if dbc := r.db.Exec("UPDATE book_harts SET hart = ? WHERE book_id = ?", bookHart.Hart+1, bookID); dbc.Error != nil {
+			fmt.Println(dbc.Error)
 			return 0, dbc.Error
 		}
 	}
@@ -96,7 +101,16 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 	return bookHart.Hart+1, nil
 }
 
-// users_book_hartsから街頭レコードを削除し、book_hartの該当hartを-1する
+// bookの編集情報を受取り、更新する
+func (r *repository) UpdateBook(updateData *model.Book) error {
+	if dbc := r.db.Save(&updateData); dbc.Error != nil {
+		fmt.Println(dbc.Error)
+		return dbc.Error
+	}
+	return nil
+}
+
+// users_book_hartsから該当レコードを削除し、book_hartの該当hartを-1する
 func (r *repository) RemoveMyHart(bookID uint, userID uint) (*[]model.FrontBook, error) {
 	var book model.Book
 	var bookHart model.BookHart
@@ -114,6 +128,7 @@ func (r *repository) RemoveMyHart(bookID uint, userID uint) (*[]model.FrontBook,
 
 	// book_hartの該当レコードのhartを-1する
 	if dbc := r.db.Exec("UPDATE book_harts SET hart = ? WHERE book_id = ?", bookHart.Hart-1, bookID); dbc.Error != nil {
+		fmt.Println(dbc.Error)
 		return nil, dbc.Error
 	}
 

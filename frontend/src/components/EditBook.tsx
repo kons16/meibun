@@ -13,7 +13,6 @@ interface EditBookState {
         title: string
         author: string
         pages: number
-        harts: number
         myPageFlag: boolean
         hartFlag: boolean
         bookUserID: number
@@ -31,7 +30,6 @@ class EditBook extends Component<EditBookProps, EditBookState> {
                 title: this.props.location.state.Book.title,
                 author: this.props.location.state.Book.author,
                 pages: this.props.location.state.Book.pages,
-                harts: this.props.location.state.Book.harts,
                 myPageFlag: this.props.location.state.Book.myPageFlag,
                 hartFlag: this.props.location.state.Book.hartFlag,
                 bookUserID: this.props.location.state.Book.bookUserID

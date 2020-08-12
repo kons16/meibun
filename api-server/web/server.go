@@ -84,6 +84,7 @@ func (s *server) Handler() *echo.Echo {
 	e.POST("/signout", s.signoutHandler)
 
 	e.POST("/post_book", s.postBookHandler)
+	e.POST("/update_book", s.updateBookHandler)
 	e.POST("/delete_book", s.deleteBookHandler)
 	e.GET("/users/books", s.getUserBooksHandler)
 

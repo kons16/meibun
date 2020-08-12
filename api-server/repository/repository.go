@@ -10,6 +10,16 @@ import (
 	"time"
 )
 
+// UpdateBookInput はbook更新時の入力
+type UpdateBookInput struct {
+	Title       string
+	Sentence    string
+	Author      string
+	Pages		int
+	EditedAt    time.Time
+}
+
+
 type Repository interface {
 	CreateNewUser(name string, email string, passwordHash string) error
 	FindUserByEmail(email string) (*model.User, error)
@@ -20,6 +30,7 @@ type Repository interface {
 
 	CreateNewBook(sentence string, title string, author string, pages int, userId uint) error
 	DeleteBookByBookID(bookID uint, userID uint) error
+	UpdateBook(updateData *model.Book) error
 	GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error)
 
 	MakeHart(bookID uint, userID uint) (int, error)

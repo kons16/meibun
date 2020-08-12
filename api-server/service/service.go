@@ -20,6 +20,7 @@ type MeibunApp interface {
 	LogoutUser(token string) error
 
 	CreateNewBook(sentence string, title string, author string, pages int, userId uint) error
+	UpdateBook(updateData *model.Book) error
 	DeleteBookByBookID(bookID uint, userID uint) error
 	GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error)
 

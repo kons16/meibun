@@ -7,6 +7,11 @@ func (app *meibunApp) CreateNewBook(sentence string, title string, author string
 	return app.repo.CreateNewBook(sentence, title, author, pages, userId)
 }
 
+// bookを更新する
+func (app *meibunApp) UpdateBook(updateData *model.Book) error {
+	return app.repo.UpdateBook(updateData)
+}
+
 // userIDに紐づくbooksを取得
 func (app *meibunApp) GetAllBooksByUserID(userID uint) (*[]model.FrontBook, error) {
 	return app.repo.GetAllBooksByUserID(userID)
