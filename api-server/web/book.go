@@ -32,17 +32,20 @@ func (s *server) postBookHandler(c echo.Context) error {
 // POST /update_book に対応
 func (s *server) updateBookHandler(c echo.Context) error {
 	params := new(struct {
+		ID          int     `json:"ID"`
 		Sentence	string	`json:"sentence"`
 		Title		string	`json:"title"`
 		Author		string	`json:"author"`
 		Pages		int		`json:"pages"`
-		UserID		int		`json:"bookUserID"`
+		UserID		int		`json:"userID"`
 	})
 	c.Bind(params)
 
 	UserID, _ := strconv.ParseUint(strconv.Itoa(params.UserID), 10, 32)
+	ID, _ := strconv.ParseUint(strconv.Itoa(params.ID), 10, 32)
 
 	book := new(model.Book)
+	book.ID = uint(ID)
 	book.Sentence = params.Sentence
 	book.Title = params.Title
 	book.Author = params.Author

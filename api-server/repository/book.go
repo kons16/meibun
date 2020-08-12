@@ -103,10 +103,12 @@ func (r * repository) MakeHart(bookID uint, userID uint) (int, error) {
 
 // bookの編集情報を受取り、更新する
 func (r *repository) UpdateBook(updateData *model.Book) error {
-	if dbc := r.db.Save(&updateData); dbc.Error != nil {
-		fmt.Println(dbc.Error)
-		return dbc.Error
-	}
+	var book model.Book
+
+	r.db.First(&book, updateData.ID)
+	r.db.Model(&book).Updates(model.Book{
+		Author: updateData.Author, Sentence: updateData.Sentence, Title: updateData.Title,
+		Pages: updateData.Pages, UserID: updateData.UserID})
 	return nil
 }
 
