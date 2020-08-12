@@ -4,15 +4,15 @@ import history from "../history";
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 
+interface PostBookProps {
+    location: any
+}
+
 interface State {
     sentence?: string
     title?: string
     author?: string
     pages?: number
-}
-
-interface PostBookProps {
-    location: any
 }
 
 // 名文を新規登録する画面
@@ -27,9 +27,6 @@ class PostBook extends Component<PostBookProps, State> {
         };
     }
 
-    componentDidMount() {
-    }
-
     onChange = (e: any) => {
         this.setState({
             [e.target.name]: e.target.value,
@@ -37,7 +34,7 @@ class PostBook extends Component<PostBookProps, State> {
     }
 
     // 名文情報をpostする
-    handleFormSubmit = () => {
+    submitForm = () => {
         axios.post('http://localhost:8000/post_book',
             {'sentence': this.state.sentence, 'title': this.state.title, 'author': this.state.author, 'pages': this.state.pages},
             {withCredentials: true})
@@ -73,7 +70,7 @@ class PostBook extends Component<PostBookProps, State> {
                         <input type="text" name="author" onChange={this.onChange} />
                     </div>
                     <Button variant="contained" color="primary"　style={{ marginTop: 10, width: 100 }}
-                            onClick={this.handleFormSubmit} >
+                            onClick={this.submitForm} >
                         追加する
                     </Button>
                 </div>
