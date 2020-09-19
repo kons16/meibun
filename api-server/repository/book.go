@@ -106,9 +106,13 @@ func (r *repository) UpdateBook(updateData *model.Book) error {
 	var book model.Book
 
 	r.db.First(&book, updateData.ID)
-	r.db.Model(&book).Updates(model.Book{
-		Author: updateData.Author, Sentence: updateData.Sentence, Title: updateData.Title,
-		Pages: updateData.Pages, UserID: updateData.UserID})
+	dbc := r.db.Model(&book).Updates(model.Book{
+			Author: updateData.Author, Sentence: updateData.Sentence, Title: updateData.Title,
+			Pages: updateData.Pages, UserID: updateData.UserID})
+	if dbc.Error != nil {
+		fmt.Println(dbc.Error)
+		return dbc.Error
+	}
 	return nil
 }
 

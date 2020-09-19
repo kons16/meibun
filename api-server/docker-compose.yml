@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./docker/db/mysql_init:/docker-entrypoint-initdb.d    # 初期化に使用
+      - ./docker/db/mysql_data:/var/lib/mysql                 # 永続化に使用
+      - ./docker/db/config/charset.cnf:/etc/mysql/conf.d/charset.cnf
+    environment:
+      MYSQL_DATABASE: meibun-db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  api:
+    build: .
+    volumes:
+      - ./:/go/src/github.com/kons16/meibun/api-server
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    command: sh -c "./wait-for-it.sh db:3306;fresh;"
