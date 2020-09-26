@@ -1,3 +1,4 @@
 .idea
 
 /api-server/.env
+api-server/docker/db/mysql_data/

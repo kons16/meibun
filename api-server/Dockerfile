@@ -5,5 +5,4 @@ ENV GO111MODULE=on
 WORKDIR /go/src/github.com/kons16/meibun/api-server
 
 COPY . .
-RUN apk add --no-cache
-   && go get github.com/pilu/fresh
+RUN apk add --no-cache && go get github.com/pilu/fresh
