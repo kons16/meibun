@@ -19,13 +19,7 @@ services:
     volumes:
       - ./:/go/src/github.com/kons16/meibun/api-server
     ports:
-      - '8080:8080'
+      - '8000:8000'
     depends_on:
       - db
     command: sh -c "./wait-for-it.sh db:3306;fresh;"
-
-  front:
-    image: node:14
-    ports:
-      - "3000:3000"
-
