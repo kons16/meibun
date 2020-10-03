@@ -28,7 +28,6 @@ func Test_WillSignupHandler(t *testing.T) {
 	rec := httptest.NewRecorder()
 	req.AddCookie(&http.Cookie{Name: sessionKey, Value: "token"})
 	c := e.NewContext(req, rec)
-	// c.SetCookie(&http.Cookie{Name: sessionKey, Value: "token"})
 
 	app := &server{app: mockService}
 	_ = app.willSignupHandler(c)
