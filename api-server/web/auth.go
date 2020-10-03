@@ -11,8 +11,8 @@ func (s *server) willSignupHandler(c echo.Context) error {
 	user := s.findUser(c)
 
 	data := map[string]interface{}{
-		"Name":    sessionKey,
-		"User":    user,
+		"Name": sessionKey,
+		"User": user,
 	}
 	return c.JSON(http.StatusOK, data)
 }
@@ -20,9 +20,9 @@ func (s *server) willSignupHandler(c echo.Context) error {
 // signupHandler は POST /signup に対応
 func (s *server) signupHandler(c echo.Context) error {
 	params := new(struct {
-		Name		string `json:"name"`
-		Email		string `json:"email"`
-		Password	string `json:"password"`
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	})
 	c.Bind(params)
 
@@ -49,10 +49,10 @@ func (s *server) signupHandler(c echo.Context) error {
 // signoutHandler は POST /signout に対応
 func (s *server) signoutHandler(c echo.Context) error {
 	/*
-	TODO: user_sessionから該当レコードの削除処理
-	cookie, err := c.Cookie(sessionKey)
-	if err == nil && cookie.Value != "" {
-	}
+		TODO: user_sessionから該当レコードの削除処理
+		cookie, err := c.Cookie(sessionKey)
+		if err == nil && cookie.Value != "" {
+		}
 	*/
 
 	return c.JSON(http.StatusOK, map[string]string{
@@ -64,8 +64,8 @@ func (s *server) willSigninHandler(c echo.Context) error {
 	user := s.findUser(c)
 
 	data := map[string]interface{}{
-		"Name":    sessionKey,
-		"User":    user,
+		"Name": sessionKey,
+		"User": user,
 	}
 	return c.JSON(http.StatusOK, data)
 }
@@ -73,8 +73,8 @@ func (s *server) willSigninHandler(c echo.Context) error {
 // signinHandler は　POST /signin に対応
 func (s *server) signinHandler(c echo.Context) error {
 	params := new(struct {
-		Email		string `json:"email"`
-		Password	string `json:"password"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	})
 	c.Bind(params)
 
