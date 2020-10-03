@@ -9,5 +9,5 @@ $ docker-compose up
 
 ### テスト
 ```
-
+go test -v ./...
 ```
