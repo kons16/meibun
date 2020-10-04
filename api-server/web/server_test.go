@@ -22,7 +22,13 @@ func Test_GetSessionNameHandler(t *testing.T) {
 
 	mockService := mock_service.NewMockMeibunApp(ctrl)
 	app := &server{app: mockService}
-	_ = app.getSessionNameHandler(c)
+	r := app.getSessionNameHandler(c)
 
-	assert.Equal(t, http.StatusOK, rec.Code)
+	body := rec.Body.String()
+	m := "{\"Name\":\"TEST_SESSION_KEY\"}\n"
+
+	if assert.NoError(t, r) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, m, body)
+	}
 }

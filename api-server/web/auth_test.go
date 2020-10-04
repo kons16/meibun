@@ -77,3 +77,27 @@ func Test_SignupHandler(t *testing.T) {
 		assert.Equal(t, "\"Name\": \"TEST_SESSION_KEY\"\"token\": \"token\"", newBody)
 	}
 }
+
+// POST /signout
+func Test_SignoutHandler(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/signout", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockService := mock_service.NewMockMeibunApp(ctrl)
+	app := &server{app: mockService}
+	r := app.signoutHandler(c)
+
+	body := rec.Body.String()
+	m := "{\"Name\":\"TEST_SESSION_KEY\"}\n"
+
+	if assert.NoError(t, r) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, m, body)
+	}
+}
